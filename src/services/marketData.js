@@ -1,5 +1,6 @@
 const FX_API_URL = 'https://open.er-api.com/v6/latest/TRY'
 const METALS_API_URL = 'https://metalmetric.com/api/gpt?action=spot_prices&metal=all'
+const MARKET_LATEST_API_URL = '/api/market/latest'
 
 const OUNCE_TO_GRAM = 31.1034768
 const GRAM_GOLD_IN_QUARTER = 1.75
@@ -15,6 +16,16 @@ function makeBidAsk(midPrice, spreadRatio) {
 }
 
 export async function fetchMarketBoardData() {
+  try {
+    const response = await fetch(MARKET_LATEST_API_URL)
+    if (!response.ok) {
+      throw new Error('proxy failed')
+    }
+    return response.json()
+  } catch {
+    // Local fallback when serverless endpoint is unavailable.
+  }
+
   const [fxResponse, metalsResponse] = await Promise.all([
     fetch(FX_API_URL),
     fetch(METALS_API_URL),

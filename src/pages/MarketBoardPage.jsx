@@ -7,7 +7,7 @@ const moneyFormatter = new Intl.NumberFormat('tr-TR', {
   maximumFractionDigits: 2,
 })
 
-export default function MarketBoardPage() {
+export default function MarketBoardPage({ onSelectInstrument }) {
   const [rows, setRows] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
@@ -109,7 +109,15 @@ export default function MarketBoardPage() {
             <tbody>
               {rows.map((row) => (
                 <tr key={row.id} className="border-t border-slate-800 bg-slate-900/70">
-                  <td className="px-4 py-3 text-sm font-medium text-slate-200">{row.name}</td>
+                  <td className="px-4 py-2">
+                    <button
+                      type="button"
+                      onClick={() => onSelectInstrument?.(row)}
+                      className="w-full rounded-lg px-2 py-1 text-left text-sm font-medium text-slate-200 transition hover:bg-slate-800"
+                    >
+                      {row.name}
+                    </button>
+                  </td>
                   <td className="px-4 py-3 text-right text-sm font-semibold text-emerald-300">
                     {moneyFormatter.format(row.buy)}
                   </td>
