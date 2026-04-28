@@ -135,6 +135,19 @@ export default function MarketBoardPage() {
             </tbody>
           </table>
         </div>
+
+        <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-700/80 bg-slate-900/40 px-4 py-3">
+          <p className="text-sm text-slate-400">
+            Size daha isabetli oneriler sunabilmemiz icin kisa profil anketimize
+            katilmanizi oneririz.
+          </p>
+          <button
+            type="button"
+            className="rounded-lg border border-emerald-400/40 bg-emerald-400/10 px-4 py-2 text-sm font-medium text-emerald-300 transition hover:bg-emerald-400/20"
+          >
+            Teste Git
+          </button>
+        </div>
       </section>
     </main>
   )
