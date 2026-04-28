@@ -1,6 +1,5 @@
 import BalanceInput from '../components/BalanceInput'
 import InvestmentList from '../components/InvestmentList'
-import NewsletterForm from '../components/NewsletterForm'
 
 export default function HomePage() {
   return (
@@ -15,7 +14,6 @@ export default function HomePage() {
       </div>
       <BalanceInput />
       <InvestmentList />
-      <NewsletterForm />
     </main>
   )
 }

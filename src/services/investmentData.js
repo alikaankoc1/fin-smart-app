@@ -12,6 +12,12 @@ export const investmentOptions = [
     iconName: 'BadgeDollarSign',
   },
   {
+    id: 'euro',
+    name: 'Euro',
+    riskLevel: 'Orta',
+    iconName: 'CircleDollarSign',
+  },
+  {
     id: 'bitcoin',
     name: 'Bitcoin',
     riskLevel: 'Yuksek',

@@ -1,10 +1,12 @@
 import useFinance from '../hooks/useFinance'
 
 const allocationRules = [
-  { id: 'deposit', name: 'Mevduat', ratio: 0.4 },
-  { id: 'gold', name: 'Altin', ratio: 0.3 },
+  { id: 'deposit', name: 'Mevduat', ratio: 0.25 },
+  { id: 'gold', name: 'Altin', ratio: 0.2 },
   { id: 'stock', name: 'Hisse Senedi', ratio: 0.2 },
-  { id: 'crypto', name: 'Kripto', ratio: 0.1 },
+  { id: 'crypto', name: 'Kripto', ratio: 0.15 },
+  { id: 'usd', name: 'Dolar', ratio: 0.1 },
+  { id: 'eur', name: 'Euro', ratio: 0.1 },
 ]
 
 const currencyFormatter = new Intl.NumberFormat('tr-TR', {
