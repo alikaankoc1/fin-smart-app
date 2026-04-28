@@ -1,4 +1,4 @@
-import { AppProvider } from './context/AppContext'
+import { AppProvider } from './context/AppContext.jsx'
 import { FinanceProvider } from './context/FinanceContext'
 import HomePage from './pages/HomePage'
 

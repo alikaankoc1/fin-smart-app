@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { AppContext } from './appContext'
+import { AppContext } from './app-context'
 
 export function AppProvider({ children }) {
   const [appName] = useState('Fin Smart App')
