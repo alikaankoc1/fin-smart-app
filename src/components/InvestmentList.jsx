@@ -45,20 +45,21 @@ export default function InvestmentList() {
 
   return (
     <section className="w-full max-w-4xl space-y-3">
-      <h2 className="text-center text-xl font-semibold text-slate-900">
+      <h2 className="text-center text-xl font-semibold text-white">
         Akilli Yatirim Dagilimi
       </h2>
-      <p className="text-center text-sm text-slate-600">
-        Secili risk seviyesi: <span className="font-semibold">{riskLevel}</span>
+      <p className="text-center text-sm text-slate-400">
+        Secili risk seviyesi:{' '}
+        <span className="font-semibold text-emerald-300">{riskLevel}</span>
       </p>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {plans.map((plan) => (
           <article
             key={plan.id}
-            className="rounded-2xl border border-slate-200 bg-white p-4 shadow-md shadow-slate-200/60"
+            className="rounded-2xl border border-slate-700 bg-slate-900 p-4 shadow-xl shadow-black/30"
           >
-            <p className="text-sm text-slate-500">{plan.name}</p>
-            <p className="mt-2 text-lg font-bold text-slate-900">
+            <p className="text-sm text-slate-400">{plan.name}</p>
+            <p className="mt-2 text-lg font-bold text-emerald-300">
               {currencyFormatter.format(plan.amount)}
             </p>
           </article>
