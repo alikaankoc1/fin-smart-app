@@ -1,3 +1,4 @@
+import BalanceInput from '../components/BalanceInput'
 import NewsletterForm from '../components/NewsletterForm'
 
 export default function HomePage() {
@@ -11,6 +12,7 @@ export default function HomePage() {
           Vite + React + Tailwind + Lucide + React Hook Form kurulumu hazir.
         </p>
       </div>
+      <BalanceInput />
       <NewsletterForm />
     </main>
   )
