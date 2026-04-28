@@ -1,11 +1,14 @@
 import { AppProvider } from './context/AppContext'
+import { FinanceProvider } from './context/FinanceContext'
 import HomePage from './pages/HomePage'
 
 function App() {
   return (
-    <AppProvider>
-      <HomePage />
-    </AppProvider>
+    <FinanceProvider>
+      <AppProvider>
+        <HomePage />
+      </AppProvider>
+    </FinanceProvider>
   )
 }
 
