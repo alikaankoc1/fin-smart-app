@@ -1,4 +1,5 @@
 import BalanceInput from '../components/BalanceInput'
+import InvestmentList from '../components/InvestmentList'
 import NewsletterForm from '../components/NewsletterForm'
 
 export default function HomePage() {
@@ -13,6 +14,7 @@ export default function HomePage() {
         </p>
       </div>
       <BalanceInput />
+      <InvestmentList />
       <NewsletterForm />
     </main>
   )
