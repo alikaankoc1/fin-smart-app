@@ -4,7 +4,7 @@ import { FinanceContext } from './finance-context'
 export function FinanceProvider({ children }) {
   const [totalBalance, setTotalBalance] = useState(0)
   const [investmentPreferences, setInvestmentPreferences] = useState({
-    riskLevel: 'moderate',
+    riskLevel: 'Orta',
     investmentHorizon: 'medium-term',
     preferredSectors: [],
   })
@@ -13,11 +13,19 @@ export function FinanceProvider({ children }) {
     setTotalBalance(Number(newBalance) || 0)
   }
 
+  const updateRiskLevel = (riskLevel) => {
+    setInvestmentPreferences((prev) => ({
+      ...prev,
+      riskLevel,
+    }))
+  }
+
   const value = useMemo(
     () => ({
       totalBalance,
       investmentPreferences,
       updateTotalBalance,
+      updateRiskLevel,
       setInvestmentPreferences,
     }),
     [totalBalance, investmentPreferences],

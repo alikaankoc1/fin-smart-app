@@ -1,5 +1,6 @@
 import BalanceInput from '../components/BalanceInput'
 import InvestmentList from '../components/InvestmentList'
+import RiskSelector from '../components/RiskSelector'
 
 export default function HomePage() {
   return (
@@ -13,6 +14,7 @@ export default function HomePage() {
         </p>
       </div>
       <BalanceInput />
+      <RiskSelector />
       <InvestmentList />
     </main>
   )
