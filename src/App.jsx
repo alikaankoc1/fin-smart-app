@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { AppProvider } from './context/AppContext.jsx'
 import LoginPage from './pages/LoginPage'
 import MarketBoardPage from './pages/MarketBoardPage'
 import MarketTrendPage from './pages/MarketTrendPage'
@@ -20,28 +19,26 @@ function App() {
   }
 
   return (
-    <AppProvider>
-      {isAuthenticated ? (
-        activePage === 'test' ? (
-          <TestCommandPage
-            onBack={() => setActivePage('board')}
-            onComplete={() => setActivePage('board')}
-          />
-        ) : selectedInstrument ? (
-          <MarketTrendPage
-            instrument={selectedInstrument}
-            onBack={() => setSelectedInstrument(null)}
-          />
-        ) : (
-          <MarketBoardPage
-            onSelectInstrument={setSelectedInstrument}
-            onGoTestPage={() => setActivePage('test')}
-          />
-        )
+    isAuthenticated ? (
+      activePage === 'test' ? (
+        <TestCommandPage
+          onBack={() => setActivePage('board')}
+          onComplete={() => setActivePage('board')}
+        />
+      ) : selectedInstrument ? (
+        <MarketTrendPage
+          instrument={selectedInstrument}
+          onBack={() => setSelectedInstrument(null)}
+        />
       ) : (
-        <LoginPage onLogin={handleLogin} />
-      )}
-    </AppProvider>
+        <MarketBoardPage
+          onSelectInstrument={setSelectedInstrument}
+          onGoTestPage={() => setActivePage('test')}
+        />
+      )
+    ) : (
+      <LoginPage onLogin={handleLogin} />
+    )
   )
 }
 
