@@ -54,6 +54,12 @@ export default function TestCommandPage({ onBack, onComplete }) {
     () => (currentStep < 0 ? 'Hazirlik' : `${currentStep + 1} / ${questions.length}`),
     [currentStep],
   )
+  const progressPercent = useMemo(() => {
+    if (currentStep < 0) {
+      return 0
+    }
+    return ((currentStep + 1) / questions.length) * 100
+  }, [currentStep])
 
   const handleSelectOption = (option) => {
     setAnswers((prev) => ({
@@ -115,6 +121,18 @@ export default function TestCommandPage({ onBack, onComplete }) {
 
         <h1 className="text-2xl font-bold text-white md:text-3xl">Yatirim Profili Testi</h1>
         <p className="mt-2 text-sm text-slate-400">Soru {progressText}</p>
+        <div className="mt-4">
+          <div className="mb-2 flex items-center justify-between text-xs text-slate-400">
+            <span>Ilerleme</span>
+            <span>%{Math.round(progressPercent)}</span>
+          </div>
+          <div className="h-2 w-full overflow-hidden rounded-full bg-slate-800">
+            <div
+              className="h-full rounded-full bg-emerald-400 transition-all duration-300"
+              style={{ width: `${progressPercent}%` }}
+            />
+          </div>
+        </div>
 
         <div className="mt-6 rounded-2xl border border-slate-700/80 bg-slate-900/50 p-4 md:p-6">
           {currentStep < 0 ? (
@@ -151,8 +169,8 @@ export default function TestCommandPage({ onBack, onComplete }) {
                     onClick={() => handleSelectOption(option)}
                     className={`w-full rounded-xl border px-4 py-3 text-left text-sm font-medium transition md:text-base ${
                       selectedOption === option
-                        ? 'border-emerald-400 bg-emerald-400/15 text-emerald-200'
-                        : 'border-slate-700 bg-slate-900 text-slate-200 hover:bg-slate-800'
+                      ? 'border-emerald-400 bg-emerald-400/15 text-emerald-200 shadow-[0_0_20px_rgba(52,211,153,0.35)]'
+                      : 'border-slate-700 bg-slate-900 text-slate-200 hover:bg-slate-800 hover:shadow-[0_0_20px_rgba(52,211,153,0.25)]'
                     }`}
                   >
                     {option}
@@ -169,7 +187,7 @@ export default function TestCommandPage({ onBack, onComplete }) {
               disabled={
                 currentStep < 0 ? !hasValidAmount : !selectedOption
               }
-              className="rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-semibold text-slate-950 transition enabled:hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-40"
+              className="rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-semibold text-slate-950 transition enabled:hover:bg-emerald-400 enabled:hover:shadow-[0_0_22px_rgba(52,211,153,0.45)] disabled:cursor-not-allowed disabled:opacity-40"
             >
               {isLastStep ? 'Bitir' : 'Sonraki'}
             </button>
