@@ -106,6 +106,7 @@ function buildChartModel(series) {
 export default function MarketTrendPage({ instrument, onBack }) {
   const [range, setRange] = useState('3m')
   const [interval, setInterval] = useState('1d')
+  const [activeFilter, setActiveFilter] = useState('range:3m')
   const [series, setSeries] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
@@ -191,9 +192,12 @@ export default function MarketTrendPage({ instrument, onBack }) {
             <button
               key={option.id}
               type="button"
-              onClick={() => setRange(option.id)}
+              onClick={() => {
+                setRange(option.id)
+                setActiveFilter(`range:${option.id}`)
+              }}
               className={`rounded-lg px-3 py-1.5 text-sm font-medium ${
-                range === option.id
+                activeFilter === `range:${option.id}`
                   ? 'bg-emerald-500 text-slate-950'
                   : 'bg-slate-800 text-slate-200 hover:bg-slate-700'
               }`}
@@ -205,9 +209,12 @@ export default function MarketTrendPage({ instrument, onBack }) {
             <button
               key={option.id}
               type="button"
-              onClick={() => setInterval(option.id)}
+              onClick={() => {
+                setInterval(option.id)
+                setActiveFilter(`interval:${option.id}`)
+              }}
               className={`rounded-lg px-3 py-1.5 text-sm font-medium ${
-                interval === option.id
+                activeFilter === `interval:${option.id}`
                   ? 'bg-emerald-500 text-slate-950'
                   : 'bg-slate-800 text-slate-200 hover:bg-slate-700'
               }`}
