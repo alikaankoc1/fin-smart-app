@@ -4,6 +4,7 @@ import { FinanceProvider } from './context/FinanceContext'
 import LoginPage from './pages/LoginPage'
 import MarketBoardPage from './pages/MarketBoardPage'
 import MarketTrendPage from './pages/MarketTrendPage'
+import TestCommandPage from './pages/TestCommandPage'
 
 const AUTH_STORAGE_KEY = 'fin-smart-authenticated'
 
@@ -12,6 +13,7 @@ function App() {
     return localStorage.getItem(AUTH_STORAGE_KEY) === 'true'
   })
   const [selectedInstrument, setSelectedInstrument] = useState(null)
+  const [activePage, setActivePage] = useState('board')
 
   const handleLogin = () => {
     setIsAuthenticated(true)
@@ -22,13 +24,18 @@ function App() {
     <FinanceProvider>
       <AppProvider>
         {isAuthenticated ? (
-          selectedInstrument ? (
+          activePage === 'test' ? (
+            <TestCommandPage onBack={() => setActivePage('board')} />
+          ) : selectedInstrument ? (
             <MarketTrendPage
               instrument={selectedInstrument}
               onBack={() => setSelectedInstrument(null)}
             />
           ) : (
-            <MarketBoardPage onSelectInstrument={setSelectedInstrument} />
+            <MarketBoardPage
+              onSelectInstrument={setSelectedInstrument}
+              onGoTestPage={() => setActivePage('test')}
+            />
           )
         ) : (
           <LoginPage onLogin={handleLogin} />
