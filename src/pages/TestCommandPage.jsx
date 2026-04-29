@@ -1,5 +1,6 @@
 import { ArrowLeft } from 'lucide-react'
 import { useMemo, useState } from 'react'
+import useFinance from '../hooks/useFinance'
 
 const questions = [
   {
@@ -19,7 +20,18 @@ const questions = [
   },
 ]
 
+function calculateRiskProfile(investmentHorizon, drawdownTolerance) {
+  if (investmentHorizon === 'Kisa Vadeli' && drawdownTolerance === 'Cok') {
+    return 'Muhafazakar'
+  }
+  if (investmentHorizon === 'Uzun Vadeli' && drawdownTolerance === 'Hic') {
+    return 'Agresif'
+  }
+  return 'Dengeli'
+}
+
 export default function TestCommandPage({ onBack, onComplete }) {
+  const { setRiskProfile, setTotalBalance } = useFinance()
   const [currentStep, setCurrentStep] = useState(-1)
   const [savingsAmount, setSavingsAmount] = useState('')
   const [answers, setAnswers] = useState({})
@@ -60,6 +72,12 @@ export default function TestCommandPage({ onBack, onComplete }) {
     }
 
     if (isLastStep) {
+      const profile = calculateRiskProfile(
+        answers.investmentHorizon,
+        answers.drawdownTolerance,
+      )
+      setRiskProfile(profile)
+      setTotalBalance(Number(savingsAmount) || 0)
       onComplete?.()
       return
     }
