@@ -36,6 +36,7 @@ const currencyFormatter = new Intl.NumberFormat('tr-TR', {
 export default function InvestmentList() {
   const { totalBalance, investmentPreferences } = useFinance()
   const riskLevel = investmentPreferences.riskLevel
+  const profileResult = investmentPreferences.profileResult
   const allocationRules = allocationByRisk[riskLevel] ?? allocationByRisk.Orta
 
   const plans = allocationRules.map((rule) => ({
@@ -52,6 +53,12 @@ export default function InvestmentList() {
         Secili risk seviyesi:{' '}
         <span className="font-semibold text-emerald-300">{riskLevel}</span>
       </p>
+      {profileResult && (
+        <p className="text-center text-sm text-slate-400">
+          Test sonucu:{' '}
+          <span className="font-semibold text-emerald-300">{profileResult}</span>
+        </p>
+      )}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {plans.map((plan) => (
           <article

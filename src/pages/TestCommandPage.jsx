@@ -1,5 +1,6 @@
 import { ArrowLeft } from 'lucide-react'
 import { useMemo, useState } from 'react'
+import useFinance from '../hooks/useFinance'
 
 const questions = [
   {
@@ -19,7 +20,28 @@ const questions = [
   },
 ]
 
-export default function TestCommandPage({ onBack }) {
+function calculateProfileResult(investmentHorizon, drawdownTolerance) {
+  if (investmentHorizon === 'Kisa Vadeli' && drawdownTolerance === 'Cok') {
+    return 'Muhafazakar'
+  }
+  if (investmentHorizon === 'Uzun Vadeli' && drawdownTolerance === 'Hic') {
+    return 'Agresif'
+  }
+  return 'Dengeli'
+}
+
+function mapProfileToRiskLevel(profileResult) {
+  if (profileResult === 'Muhafazakar') {
+    return 'Dusuk'
+  }
+  if (profileResult === 'Agresif') {
+    return 'Yuksek'
+  }
+  return 'Orta'
+}
+
+export default function TestCommandPage({ onBack, onComplete }) {
+  const { updateTotalBalance, setInvestmentPreferences } = useFinance()
   const [currentStep, setCurrentStep] = useState(-1)
   const [savingsAmount, setSavingsAmount] = useState('')
   const [answers, setAnswers] = useState({})
@@ -49,9 +71,31 @@ export default function TestCommandPage({ onBack }) {
       return
     }
 
-    if (!selectedOption || isLastStep) {
+    if (!selectedOption) {
       return
     }
+
+    if (isLastStep) {
+      const profileResult = calculateProfileResult(
+        answers.investmentHorizon,
+        answers.drawdownTolerance,
+      )
+      const riskLevel = mapProfileToRiskLevel(profileResult)
+      const total = Number(savingsAmount) || 0
+
+      updateTotalBalance(total)
+      setInvestmentPreferences((prev) => ({
+        ...prev,
+        riskLevel,
+        investmentHorizon: answers.investmentHorizon,
+        profileResult,
+        drawdownTolerance: answers.drawdownTolerance,
+        goal: answers.goal,
+      }))
+      onComplete?.()
+      return
+    }
+
     setCurrentStep((prev) => prev + 1)
   }
 
@@ -123,11 +167,11 @@ export default function TestCommandPage({ onBack }) {
               type="button"
               onClick={handleNext}
               disabled={
-                currentStep < 0 ? !hasValidAmount : !selectedOption || isLastStep
+                currentStep < 0 ? !hasValidAmount : !selectedOption
               }
               className="rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-semibold text-slate-950 transition enabled:hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-40"
             >
-              Sonraki
+              {isLastStep ? 'Bitir' : 'Sonraki'}
             </button>
           </div>
         </div>

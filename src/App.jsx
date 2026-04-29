@@ -5,6 +5,7 @@ import LoginPage from './pages/LoginPage'
 import MarketBoardPage from './pages/MarketBoardPage'
 import MarketTrendPage from './pages/MarketTrendPage'
 import TestCommandPage from './pages/TestCommandPage'
+import HomePage from './pages/HomePage'
 
 const AUTH_STORAGE_KEY = 'fin-smart-authenticated'
 
@@ -24,8 +25,13 @@ function App() {
     <FinanceProvider>
       <AppProvider>
         {isAuthenticated ? (
-          activePage === 'test' ? (
-            <TestCommandPage onBack={() => setActivePage('board')} />
+          activePage === 'dashboard' ? (
+            <HomePage />
+          ) : activePage === 'test' ? (
+            <TestCommandPage
+              onBack={() => setActivePage('board')}
+              onComplete={() => setActivePage('dashboard')}
+            />
           ) : selectedInstrument ? (
             <MarketTrendPage
               instrument={selectedInstrument}
