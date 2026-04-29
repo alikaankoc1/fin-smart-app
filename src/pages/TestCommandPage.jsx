@@ -20,14 +20,16 @@ const questions = [
 ]
 
 export default function TestCommandPage({ onBack }) {
-  const [currentStep, setCurrentStep] = useState(0)
+  const [currentStep, setCurrentStep] = useState(-1)
+  const [savingsAmount, setSavingsAmount] = useState('')
   const [answers, setAnswers] = useState({})
 
-  const currentQuestion = questions[currentStep]
-  const selectedOption = answers[currentQuestion.id]
+  const currentQuestion = currentStep >= 0 ? questions[currentStep] : null
+  const selectedOption = currentQuestion ? answers[currentQuestion.id] : null
   const isLastStep = currentStep === questions.length - 1
+  const hasValidAmount = Number(savingsAmount) > 0
   const progressText = useMemo(
-    () => `${currentStep + 1} / ${questions.length}`,
+    () => (currentStep < 0 ? 'Hazirlik' : `${currentStep + 1} / ${questions.length}`),
     [currentStep],
   )
 
@@ -39,6 +41,14 @@ export default function TestCommandPage({ onBack }) {
   }
 
   const handleNext = () => {
+    if (currentStep < 0) {
+      if (!hasValidAmount) {
+        return
+      }
+      setCurrentStep(0)
+      return
+    }
+
     if (!selectedOption || isLastStep) {
       return
     }
@@ -63,32 +73,58 @@ export default function TestCommandPage({ onBack }) {
         <p className="mt-2 text-sm text-slate-400">Soru {progressText}</p>
 
         <div className="mt-6 rounded-2xl border border-slate-700/80 bg-slate-900/50 p-4 md:p-6">
-          <h2 className="text-lg font-semibold text-white md:text-xl">
-            {currentQuestion.text}
-          </h2>
+          {currentStep < 0 ? (
+            <div>
+              <h2 className="text-lg font-semibold text-white md:text-xl">
+                Birikim yapilacak tutar nedir?
+              </h2>
+              <p className="mt-2 text-sm text-slate-400">
+                Teste baslamadan once hedef tutari giriniz.
+              </p>
+              <div className="mt-4">
+                <input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={savingsAmount}
+                  onChange={(event) => setSavingsAmount(event.target.value)}
+                  placeholder="Orn: 100000"
+                  className="w-full rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-emerald-400"
+                />
+              </div>
+            </div>
+          ) : (
+            <>
+              <h2 className="text-lg font-semibold text-white md:text-xl">
+                {currentQuestion.text}
+              </h2>
 
-          <div className="mt-4 space-y-3">
-            {currentQuestion.options.map((option) => (
-              <button
-                key={option}
-                type="button"
-                onClick={() => handleSelectOption(option)}
-                className={`w-full rounded-xl border px-4 py-3 text-left text-sm font-medium transition md:text-base ${
-                  selectedOption === option
-                    ? 'border-emerald-400 bg-emerald-400/15 text-emerald-200'
-                    : 'border-slate-700 bg-slate-900 text-slate-200 hover:bg-slate-800'
-                }`}
-              >
-                {option}
-              </button>
-            ))}
-          </div>
+              <div className="mt-4 space-y-3">
+                {currentQuestion.options.map((option) => (
+                  <button
+                    key={option}
+                    type="button"
+                    onClick={() => handleSelectOption(option)}
+                    className={`w-full rounded-xl border px-4 py-3 text-left text-sm font-medium transition md:text-base ${
+                      selectedOption === option
+                        ? 'border-emerald-400 bg-emerald-400/15 text-emerald-200'
+                        : 'border-slate-700 bg-slate-900 text-slate-200 hover:bg-slate-800'
+                    }`}
+                  >
+                    {option}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
 
           <div className="mt-6 flex justify-end">
             <button
               type="button"
               onClick={handleNext}
-              disabled={!selectedOption || isLastStep}
+              disabled={
+                currentStep < 0 ? !hasValidAmount : !selectedOption || isLastStep
+              }
               className="rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-semibold text-slate-950 transition enabled:hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-40"
             >
               Sonraki
