@@ -1,6 +1,5 @@
 import { ArrowLeft } from 'lucide-react'
 import { useMemo, useState } from 'react'
-import useFinance from '../hooks/useFinance'
 
 const questions = [
   {
@@ -20,28 +19,7 @@ const questions = [
   },
 ]
 
-function calculateProfileResult(investmentHorizon, drawdownTolerance) {
-  if (investmentHorizon === 'Kisa Vadeli' && drawdownTolerance === 'Cok') {
-    return 'Muhafazakar'
-  }
-  if (investmentHorizon === 'Uzun Vadeli' && drawdownTolerance === 'Hic') {
-    return 'Agresif'
-  }
-  return 'Dengeli'
-}
-
-function mapProfileToRiskLevel(profileResult) {
-  if (profileResult === 'Muhafazakar') {
-    return 'Dusuk'
-  }
-  if (profileResult === 'Agresif') {
-    return 'Yuksek'
-  }
-  return 'Orta'
-}
-
 export default function TestCommandPage({ onBack, onComplete }) {
-  const { updateTotalBalance, setInvestmentPreferences } = useFinance()
   const [currentStep, setCurrentStep] = useState(-1)
   const [savingsAmount, setSavingsAmount] = useState('')
   const [answers, setAnswers] = useState({})
@@ -82,22 +60,6 @@ export default function TestCommandPage({ onBack, onComplete }) {
     }
 
     if (isLastStep) {
-      const profileResult = calculateProfileResult(
-        answers.investmentHorizon,
-        answers.drawdownTolerance,
-      )
-      const riskLevel = mapProfileToRiskLevel(profileResult)
-      const total = Number(savingsAmount) || 0
-
-      updateTotalBalance(total)
-      setInvestmentPreferences((prev) => ({
-        ...prev,
-        riskLevel,
-        investmentHorizon: answers.investmentHorizon,
-        profileResult,
-        drawdownTolerance: answers.drawdownTolerance,
-        goal: answers.goal,
-      }))
       onComplete?.()
       return
     }
