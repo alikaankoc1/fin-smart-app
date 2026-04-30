@@ -76,6 +76,14 @@ const modeOptions = [
   { id: 'single', label: 'Tek Varlik' },
 ]
 
+const singleAssetOptions = [
+  { id: 'usd', label: 'Dolar' },
+  { id: 'eur', label: 'Euro' },
+  { id: 'gbp', label: 'Pound' },
+  { id: 'gram', label: 'Gram Altin' },
+  { id: 'silver', label: 'Gram Gumus' },
+]
+
 function buildSyntheticSeries(baseAmount) {
   const anchor = Number(baseAmount) || 0
   const safeAnchor = Math.max(anchor, 1)
@@ -119,6 +127,7 @@ function getAutoTrendComment(series, annualVolatility) {
 export default function RecommendationResult({ onBack }) {
   const { riskProfile, totalBalance } = useFinance()
   const [investmentMode, setInvestmentMode] = useState('mixed')
+  const [singleAssetId, setSingleAssetId] = useState('usd')
   const selectedProfile = allocationByRiskProfile[riskProfile]
     ? riskProfile
     : 'Dengeli'
@@ -249,6 +258,26 @@ export default function RecommendationResult({ onBack }) {
               ? 'Otomatik Sepet secili: risk profiline gore dagilim gosteriliyor.'
               : 'Tek Varlik secili: bir sonraki adimda tek varlik secim arayuzu eklenecek.'}
           </p>
+
+          {investmentMode === 'single' && (
+            <div className="mb-3 flex flex-wrap items-center gap-2">
+              <label htmlFor="single-asset" className="text-xs text-slate-400">
+                Tek varlik secimi
+              </label>
+              <select
+                id="single-asset"
+                value={singleAssetId}
+                onChange={(event) => setSingleAssetId(event.target.value)}
+                className="rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 text-xs text-slate-200 outline-none transition focus:border-emerald-400"
+              >
+                {singleAssetOptions.map((option) => (
+                  <option key={option.id} value={option.id}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
           <p className="text-sm text-slate-300">Toplam Portfoy Projeksiyonu (Ust Bant)</p>
           <div className="mt-2 grid grid-cols-1 gap-2 text-sm md:grid-cols-3">
