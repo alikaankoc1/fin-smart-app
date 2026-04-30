@@ -109,13 +109,29 @@ export function calculateScenarioProjection({
   const periodsPerYear = TRADING_DAYS_PER_YEAR / stepDays
   const avgStepReturn = mean(returns)
   const stepVolatility = standardDeviation(returns)
-  const annualReturn = annualizeReturn(avgStepReturn, periodsPerYear)
-  const annualVolatility = annualizeVolatility(stepVolatility, periodsPerYear)
-  const normalizedVol = annualVolatility * Number(volatilityMultiplier || 1)
+  const annualReturnRaw = annualizeReturn(avgStepReturn, periodsPerYear)
+  const annualVolatilityRaw = annualizeVolatility(stepVolatility, periodsPerYear)
+  const multiplier = Number(volatilityMultiplier || 1)
 
-  const baseReturn = clamp(annualReturn, -0.75, 2)
-  const optimisticReturn = clamp(baseReturn + normalizedVol * 0.7, -0.75, 2.5)
-  const pessimisticReturn = clamp(baseReturn - normalizedVol, -0.9, 2)
+  // Reduce overfitting to short-term drift in limited samples.
+  const reliability = clamp(returns.length / 120, 0.25, 1)
+  const annualReturn = annualReturnRaw * reliability
+  const annualVolatility = clamp(annualVolatilityRaw * multiplier, 0.04, 0.55)
+
+  // Keep base scenario realistic for free-data MVP projections.
+  const baseReturn = clamp(annualReturn, -0.2, 0.28)
+
+  // Optimistic: upside with bounded expansion.
+  const optimisticBoost = Math.max(0.04, annualVolatility * 0.6)
+  const optimisticReturn = clamp(baseReturn + optimisticBoost, -0.05, 0.5)
+
+  // Pessimistic: include explicit tail-risk penalty so losses can appear.
+  const tailRiskPenalty = Math.max(0.06, annualVolatility * 0.9)
+  let pessimisticReturn = clamp(baseReturn - tailRiskPenalty, -0.5, 0.18)
+  if (pessimisticReturn > -0.01 && annualVolatility > 0.1) {
+    pessimisticReturn = -0.01
+  }
+  pessimisticReturn = Math.min(pessimisticReturn, baseReturn - 0.03)
 
   const base = roundMoney(projectValue(safePrincipal, baseReturn, safeYears))
   const optimistic = roundMoney(
@@ -132,7 +148,7 @@ export function calculateScenarioProjection({
     pessimistic: Math.max(0, Math.min(pessimistic, base)),
     optimistic: Math.max(base, optimistic),
     annualReturn: Number(baseReturn.toFixed(4)),
-    annualVolatility: Number(normalizedVol.toFixed(4)),
+    annualVolatility: Number(annualVolatility.toFixed(4)),
     confidence,
   }
 }
