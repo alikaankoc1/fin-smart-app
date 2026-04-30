@@ -6,7 +6,9 @@ import {
   Gem,
   Landmark,
 } from 'lucide-react'
+import { useEffect, useMemo, useState } from 'react'
 import useFinance from '../hooks/useFinance'
+import { fetchInstrumentHistory } from '../services/marketHistory'
 import { calculateScenarioProjection } from '../services/scenarioProjection'
 
 const moneyFormatter = new Intl.NumberFormat('tr-TR', {
@@ -17,39 +19,39 @@ const moneyFormatter = new Intl.NumberFormat('tr-TR', {
 
 const allocationByRiskProfile = {
   'Cok Muhafazakar': [
-    { key: 'usd', name: 'Dolar', ratio: 0.12, Icon: BadgeDollarSign },
-    { key: 'eur', name: 'Euro', ratio: 0.08, Icon: CircleDollarSign },
-    { key: 'gbp', name: 'Pound', ratio: 0.05, Icon: Landmark },
-    { key: 'gram', name: 'Gram Altin', ratio: 0.6, Icon: Coins },
-    { key: 'silver', name: 'Gram Gumus', ratio: 0.15, Icon: Gem },
+    { key: 'usd', instrumentId: 'usd', name: 'Dolar', ratio: 0.12, Icon: BadgeDollarSign },
+    { key: 'eur', instrumentId: 'eur', name: 'Euro', ratio: 0.08, Icon: CircleDollarSign },
+    { key: 'gbp', instrumentId: 'gbp', name: 'Pound', ratio: 0.05, Icon: Landmark },
+    { key: 'gram', instrumentId: 'gram', name: 'Gram Altin', ratio: 0.6, Icon: Coins },
+    { key: 'silver', instrumentId: 'silver', name: 'Gram Gumus', ratio: 0.15, Icon: Gem },
   ],
   Muhafazakar: [
-    { key: 'usd', name: 'Dolar', ratio: 0.18, Icon: BadgeDollarSign },
-    { key: 'eur', name: 'Euro', ratio: 0.12, Icon: CircleDollarSign },
-    { key: 'gbp', name: 'Pound', ratio: 0.1, Icon: Landmark },
-    { key: 'gram', name: 'Gram Altin', ratio: 0.45, Icon: Coins },
-    { key: 'silver', name: 'Gram Gumus', ratio: 0.15, Icon: Gem },
+    { key: 'usd', instrumentId: 'usd', name: 'Dolar', ratio: 0.18, Icon: BadgeDollarSign },
+    { key: 'eur', instrumentId: 'eur', name: 'Euro', ratio: 0.12, Icon: CircleDollarSign },
+    { key: 'gbp', instrumentId: 'gbp', name: 'Pound', ratio: 0.1, Icon: Landmark },
+    { key: 'gram', instrumentId: 'gram', name: 'Gram Altin', ratio: 0.45, Icon: Coins },
+    { key: 'silver', instrumentId: 'silver', name: 'Gram Gumus', ratio: 0.15, Icon: Gem },
   ],
   Dengeli: [
-    { key: 'usd', name: 'Dolar', ratio: 0.25, Icon: BadgeDollarSign },
-    { key: 'eur', name: 'Euro', ratio: 0.15, Icon: CircleDollarSign },
-    { key: 'gbp', name: 'Pound', ratio: 0.15, Icon: Landmark },
-    { key: 'gram', name: 'Gram Altin', ratio: 0.3, Icon: Coins },
-    { key: 'silver', name: 'Gram Gumus', ratio: 0.15, Icon: Gem },
+    { key: 'usd', instrumentId: 'usd', name: 'Dolar', ratio: 0.25, Icon: BadgeDollarSign },
+    { key: 'eur', instrumentId: 'eur', name: 'Euro', ratio: 0.15, Icon: CircleDollarSign },
+    { key: 'gbp', instrumentId: 'gbp', name: 'Pound', ratio: 0.15, Icon: Landmark },
+    { key: 'gram', instrumentId: 'gram', name: 'Gram Altin', ratio: 0.3, Icon: Coins },
+    { key: 'silver', instrumentId: 'silver', name: 'Gram Gumus', ratio: 0.15, Icon: Gem },
   ],
   'Buyume Odakli': [
-    { key: 'usd', name: 'Dolar', ratio: 0.28, Icon: BadgeDollarSign },
-    { key: 'eur', name: 'Euro', ratio: 0.18, Icon: CircleDollarSign },
-    { key: 'gbp', name: 'Pound', ratio: 0.17, Icon: Landmark },
-    { key: 'gram', name: 'Gram Altin', ratio: 0.25, Icon: Coins },
-    { key: 'silver', name: 'Gram Gumus', ratio: 0.12, Icon: Gem },
+    { key: 'usd', instrumentId: 'usd', name: 'Dolar', ratio: 0.28, Icon: BadgeDollarSign },
+    { key: 'eur', instrumentId: 'eur', name: 'Euro', ratio: 0.18, Icon: CircleDollarSign },
+    { key: 'gbp', instrumentId: 'gbp', name: 'Pound', ratio: 0.17, Icon: Landmark },
+    { key: 'gram', instrumentId: 'gram', name: 'Gram Altin', ratio: 0.25, Icon: Coins },
+    { key: 'silver', instrumentId: 'silver', name: 'Gram Gumus', ratio: 0.12, Icon: Gem },
   ],
   Agresif: [
-    { key: 'usd', name: 'Dolar', ratio: 0.32, Icon: BadgeDollarSign },
-    { key: 'eur', name: 'Euro', ratio: 0.2, Icon: CircleDollarSign },
-    { key: 'gbp', name: 'Pound', ratio: 0.18, Icon: Landmark },
-    { key: 'gram', name: 'Gram Altin', ratio: 0.2, Icon: Coins },
-    { key: 'silver', name: 'Gram Gumus', ratio: 0.1, Icon: Gem },
+    { key: 'usd', instrumentId: 'usd', name: 'Dolar', ratio: 0.32, Icon: BadgeDollarSign },
+    { key: 'eur', instrumentId: 'eur', name: 'Euro', ratio: 0.2, Icon: CircleDollarSign },
+    { key: 'gbp', instrumentId: 'gbp', name: 'Pound', ratio: 0.18, Icon: Landmark },
+    { key: 'gram', instrumentId: 'gram', name: 'Gram Altin', ratio: 0.2, Icon: Coins },
+    { key: 'silver', instrumentId: 'silver', name: 'Gram Gumus', ratio: 0.1, Icon: Gem },
   ],
 }
 
@@ -81,12 +83,116 @@ function buildSyntheticSeries(baseAmount) {
   }))
 }
 
+function getAutoTrendComment(series, annualVolatility) {
+  if (!series || series.length < 2) {
+    return 'Son veriler sinirli, yorum guven seviyesi dusuk.'
+  }
+
+  const first = Number(series[0]?.close) || 0
+  const last = Number(series[series.length - 1]?.close) || 0
+  if (first <= 0 || last <= 0) {
+    return 'Veri kalite sorunu nedeniyle trend yorumu sinirli.'
+  }
+
+  const changePct = ((last - first) / first) * 100
+  const trendText =
+    changePct > 6
+      ? 'yukselis'
+      : changePct < -6
+        ? 'gerileme'
+        : 'yatay-seyir'
+  const volText =
+    annualVolatility > 0.28
+      ? 'yuksek oynaklik'
+      : annualVolatility > 0.16
+        ? 'orta oynaklik'
+        : 'dusuk oynaklik'
+
+  return `Son donemde ${trendText} ve ${volText} izleniyor.`
+}
+
 export default function RecommendationResult({ onBack }) {
   const { riskProfile, totalBalance } = useFinance()
   const selectedProfile = allocationByRiskProfile[riskProfile]
     ? riskProfile
     : 'Dengeli'
   const allocation = allocationByRiskProfile[selectedProfile]
+  const [scenarioByAsset, setScenarioByAsset] = useState({})
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    let active = true
+
+    const loadScenarios = async () => {
+      setLoading(true)
+      const next = {}
+      const horizonYears = horizonByProfile[selectedProfile] || 2
+      const volatilityMultiplier = volatilityByProfile[selectedProfile] || 1
+
+      await Promise.all(
+        allocation.map(async (item) => {
+          const principal = totalBalance * item.ratio
+          try {
+            const series = await fetchInstrumentHistory(item.instrumentId, '6m', '1wk')
+            const scenario = calculateScenarioProjection({
+              principal,
+              series,
+              horizonYears,
+              volatilityMultiplier,
+            })
+            next[item.key] = {
+              ...scenario,
+              comment: getAutoTrendComment(series, scenario.annualVolatility),
+            }
+          } catch {
+            const fallbackSeries = buildSyntheticSeries(principal)
+            const scenario = calculateScenarioProjection({
+              principal,
+              series: fallbackSeries,
+              horizonYears,
+              volatilityMultiplier,
+            })
+            next[item.key] = {
+              ...scenario,
+              comment: 'Canli gecmis veriye erisimde kesinti oldugu icin tahmini yorum kullaniliyor.',
+            }
+          }
+        }),
+      )
+
+      if (active) {
+        setScenarioByAsset(next)
+        setLoading(false)
+      }
+    }
+
+    loadScenarios()
+
+    return () => {
+      active = false
+    }
+  }, [allocation, selectedProfile, totalBalance])
+
+  const portfolioBand = useMemo(() => {
+    if (allocation.length === 0) {
+      return { pessimistic: 0, base: 0, optimistic: 0 }
+    }
+
+    return allocation.reduce(
+      (totals, item) => {
+        const scenario = scenarioByAsset[item.key]
+        if (!scenario) {
+          return totals
+        }
+        return {
+          pessimistic: totals.pessimistic + scenario.pessimistic,
+          base: totals.base + scenario.base,
+          optimistic: totals.optimistic + scenario.optimistic,
+        }
+      },
+      { pessimistic: 0, base: 0, optimistic: 0 },
+    )
+  }, [allocation, scenarioByAsset])
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950 px-4 py-8">
@@ -111,15 +217,25 @@ export default function RecommendationResult({ onBack }) {
           </div>
         </div>
 
+        <div className="mb-6 rounded-2xl border border-emerald-300/20 bg-emerald-400/5 p-4">
+          <p className="text-sm text-slate-300">Toplam Portfoy Projeksiyonu (Ust Bant)</p>
+          <div className="mt-2 grid grid-cols-1 gap-2 text-sm md:grid-cols-3">
+            <p className="rounded-lg border border-slate-700 bg-slate-900/70 px-3 py-2 text-slate-300">
+              Kotumser: <span className="font-semibold text-rose-300">{moneyFormatter.format(portfolioBand.pessimistic)}</span>
+            </p>
+            <p className="rounded-lg border border-slate-700 bg-slate-900/70 px-3 py-2 text-slate-300">
+              Baz: <span className="font-semibold text-emerald-300">{moneyFormatter.format(portfolioBand.base)}</span>
+            </p>
+            <p className="rounded-lg border border-slate-700 bg-slate-900/70 px-3 py-2 text-slate-300">
+              Iyimser: <span className="font-semibold text-cyan-300">{moneyFormatter.format(portfolioBand.optimistic)}</span>
+            </p>
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           {allocation.map(({ key, name, ratio, Icon }) => {
             const allocatedAmount = totalBalance * ratio
-            const scenario = calculateScenarioProjection({
-              principal: allocatedAmount,
-              series: buildSyntheticSeries(allocatedAmount),
-              horizonYears: horizonByProfile[selectedProfile] || 2,
-              volatilityMultiplier: volatilityByProfile[selectedProfile] || 1,
-            })
+            const scenario = scenarioByAsset[key]
 
             return (
               <article
@@ -136,15 +252,22 @@ export default function RecommendationResult({ onBack }) {
                 <p className="mt-1 text-sm text-emerald-300">%{Math.round(ratio * 100)}</p>
 
                 <div className="mt-4 space-y-1 rounded-xl border border-slate-700/80 bg-slate-950/40 p-3 text-xs">
-                  <p className="text-slate-400">
-                    Kotumser: <span className="font-semibold text-rose-300">{moneyFormatter.format(scenario.pessimistic)}</span>
-                  </p>
-                  <p className="text-slate-400">
-                    Baz: <span className="font-semibold text-emerald-300">{moneyFormatter.format(scenario.base)}</span>
-                  </p>
-                  <p className="text-slate-400">
-                    Iyimser: <span className="font-semibold text-cyan-300">{moneyFormatter.format(scenario.optimistic)}</span>
-                  </p>
+                  {scenario ? (
+                    <>
+                      <p className="text-slate-400">
+                        Kotumser: <span className="font-semibold text-rose-300">{moneyFormatter.format(scenario.pessimistic)}</span>
+                      </p>
+                      <p className="text-slate-400">
+                        Baz: <span className="font-semibold text-emerald-300">{moneyFormatter.format(scenario.base)}</span>
+                      </p>
+                      <p className="text-slate-400">
+                        Iyimser: <span className="font-semibold text-cyan-300">{moneyFormatter.format(scenario.optimistic)}</span>
+                      </p>
+                      <p className="pt-1 text-slate-500">{scenario.comment}</p>
+                    </>
+                  ) : (
+                    <p className="text-slate-500">{loading ? 'Senaryo hesaplanıyor...' : 'Senaryo hesaplanamadi.'}</p>
+                  )}
                 </div>
               </article>
             )
