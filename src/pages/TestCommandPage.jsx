@@ -6,17 +6,83 @@ const questions = [
   {
     id: 'investmentHorizon',
     text: 'Yatirim sureniz ne kadar?',
-    options: ['Kisa Vadeli', 'Orta Vadeli', 'Uzun Vadeli'],
+    options: [
+      { label: '0-1 yil', score: 1 },
+      { label: '1-3 yil', score: 3 },
+      { label: '3+ yil', score: 5 },
+    ],
   },
   {
     id: 'drawdownTolerance',
     text: 'Ana paranizin %10 deger kaybetmesi sizi ne kadar endiselendirir?',
-    options: ['Cok', 'Biraz', 'Hic'],
+    options: [
+      { label: 'Cok endiselendirir', score: 1 },
+      { label: 'Biraz endiselendirir', score: 3 },
+      { label: 'Endiselendirmez', score: 5 },
+    ],
+  },
+  {
+    id: 'incomeStability',
+    text: 'Gelirinizin duzenliligi nasil?',
+    options: [
+      { label: 'Degisken / belirsiz', score: 1 },
+      { label: 'Kismi duzenli', score: 3 },
+      { label: 'Cok duzenli', score: 5 },
+    ],
+  },
+  {
+    id: 'liquidityNeed',
+    text: 'Yakinda bu birikime ihtiyac duyma olasiliginiz nedir?',
+    options: [
+      { label: 'Yuksek', score: 1 },
+      { label: 'Orta', score: 3 },
+      { label: 'Dusuk', score: 5 },
+    ],
+  },
+  {
+    id: 'volatilityReaction',
+    text: 'Portfoy bir ayda %15 dusse ne yaparsiniz?',
+    options: [
+      { label: 'Hemen satarim', score: 1 },
+      { label: 'Bir kismini satarim', score: 3 },
+      { label: 'Beklerim / ekleme yaparim', score: 5 },
+    ],
+  },
+  {
+    id: 'experience',
+    text: 'Yatirim tecrubenizi nasil tanimlarsiniz?',
+    options: [
+      { label: 'Yeni basliyorum', score: 1 },
+      { label: 'Orta seviye', score: 3 },
+      { label: 'Deneyimliyim', score: 5 },
+    ],
+  },
+  {
+    id: 'tracking',
+    text: 'Portfoyunuzu ne siklikla takip edebilirsiniz?',
+    options: [
+      { label: 'Nadiren', score: 1 },
+      { label: 'Haftalik', score: 3 },
+      { label: 'Gunluk', score: 5 },
+    ],
+  },
+  {
+    id: 'returnPriority',
+    text: 'Sizin icin hangisi daha oncelikli?',
+    options: [
+      { label: 'Anapara guvenligi', score: 1 },
+      { label: 'Denge', score: 3 },
+      { label: 'Yuksek getiri potansiyeli', score: 5 },
+    ],
   },
   {
     id: 'goal',
     text: 'Amaciniz nedir?',
-    options: ['Birikimimi korumak', 'Duzenli gelir elde etmek', 'Maksimum kazanc'],
+    options: [
+      { label: 'Birikimimi korumak', score: 1 },
+      { label: 'Duzenli gelir elde etmek', score: 3 },
+      { label: 'Maksimum kazanc', score: 5 },
+    ],
   },
 ]
 
@@ -57,11 +123,20 @@ function parseAmountInput(rawValue) {
   return Number(cleaned) || 0
 }
 
-function calculateRiskProfile(investmentHorizon, drawdownTolerance) {
-  if (investmentHorizon === 'Kisa Vadeli' && drawdownTolerance === 'Cok') {
+function calculateRiskProfile(totalScore) {
+  if (totalScore <= 14) {
+    return 'Cok Muhafazakar'
+  }
+  if (totalScore <= 22) {
     return 'Muhafazakar'
   }
-  if (investmentHorizon === 'Uzun Vadeli' && drawdownTolerance === 'Hic') {
+  if (totalScore <= 30) {
+    return 'Dengeli'
+  }
+  if (totalScore <= 38) {
+    return 'Buyume Odakli'
+  }
+  if (totalScore <= 45) {
     return 'Agresif'
   }
   return 'Dengeli'
@@ -74,7 +149,7 @@ export default function TestCommandPage({ onBack, onComplete }) {
   const [answers, setAnswers] = useState({})
 
   const currentQuestion = currentStep >= 0 ? questions[currentStep] : null
-  const selectedOption = currentQuestion ? answers[currentQuestion.id] : null
+  const selectedScore = currentQuestion ? answers[currentQuestion.id] : null
   const isLastStep = currentStep === questions.length - 1
   const parsedSavingsAmount = parseAmountInput(savingsAmount)
   const hasValidAmount = parsedSavingsAmount > 0
@@ -89,10 +164,10 @@ export default function TestCommandPage({ onBack, onComplete }) {
     return ((currentStep + 1) / questions.length) * 100
   }, [currentStep])
 
-  const handleSelectOption = (option) => {
+  const handleSelectOption = (score) => {
     setAnswers((prev) => ({
       ...prev,
-      [currentQuestion.id]: option,
+      [currentQuestion.id]: score,
     }))
   }
 
@@ -105,15 +180,16 @@ export default function TestCommandPage({ onBack, onComplete }) {
       return
     }
 
-    if (!selectedOption) {
+    if (!selectedScore) {
       return
     }
 
     if (isLastStep) {
-      const profile = calculateRiskProfile(
-        answers.investmentHorizon,
-        answers.drawdownTolerance,
+      const totalScore = Object.values(answers).reduce(
+        (sum, value) => sum + Number(value || 0),
+        0,
       )
+      const profile = calculateRiskProfile(totalScore)
       setRiskProfile(profile)
       setTotalBalance(parsedSavingsAmount)
       onComplete?.()
@@ -181,16 +257,16 @@ export default function TestCommandPage({ onBack, onComplete }) {
               <div className="mt-4 space-y-3">
                 {currentQuestion.options.map((option) => (
                   <button
-                    key={option}
+                    key={option.label}
                     type="button"
-                    onClick={() => handleSelectOption(option)}
+                    onClick={() => handleSelectOption(option.score)}
                     className={`w-full rounded-xl border px-4 py-3 text-left text-sm font-medium transition md:text-base ${
-                      selectedOption === option
+                      selectedScore === option.score
                       ? 'border-emerald-400 bg-emerald-400/15 text-emerald-200 shadow-[0_0_20px_rgba(52,211,153,0.35)]'
                       : 'border-slate-700 bg-slate-900 text-slate-200 hover:bg-slate-800 hover:shadow-[0_0_20px_rgba(52,211,153,0.25)]'
                     }`}
                   >
-                    {option}
+                    {option.label}
                   </button>
                 ))}
               </div>
@@ -202,7 +278,7 @@ export default function TestCommandPage({ onBack, onComplete }) {
               type="button"
               onClick={handleNext}
               disabled={
-                currentStep < 0 ? !hasValidAmount : !selectedOption
+                currentStep < 0 ? !hasValidAmount : !selectedScore
               }
               className="rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-semibold text-slate-950 transition enabled:hover:bg-emerald-400 enabled:hover:shadow-[0_0_22px_rgba(52,211,153,0.45)] disabled:cursor-not-allowed disabled:opacity-40"
             >

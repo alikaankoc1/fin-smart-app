@@ -15,6 +15,13 @@ const moneyFormatter = new Intl.NumberFormat('tr-TR', {
 })
 
 const allocationByRiskProfile = {
+  'Cok Muhafazakar': [
+    { key: 'usd', name: 'Dolar', ratio: 0.12, Icon: BadgeDollarSign },
+    { key: 'eur', name: 'Euro', ratio: 0.08, Icon: CircleDollarSign },
+    { key: 'gbp', name: 'Pound', ratio: 0.05, Icon: Landmark },
+    { key: 'gram', name: 'Gram Altin', ratio: 0.6, Icon: Coins },
+    { key: 'silver', name: 'Gram Gumus', ratio: 0.15, Icon: Gem },
+  ],
   Muhafazakar: [
     { key: 'usd', name: 'Dolar', ratio: 0.18, Icon: BadgeDollarSign },
     { key: 'eur', name: 'Euro', ratio: 0.12, Icon: CircleDollarSign },
@@ -28,6 +35,13 @@ const allocationByRiskProfile = {
     { key: 'gbp', name: 'Pound', ratio: 0.15, Icon: Landmark },
     { key: 'gram', name: 'Gram Altin', ratio: 0.3, Icon: Coins },
     { key: 'silver', name: 'Gram Gumus', ratio: 0.15, Icon: Gem },
+  ],
+  'Buyume Odakli': [
+    { key: 'usd', name: 'Dolar', ratio: 0.28, Icon: BadgeDollarSign },
+    { key: 'eur', name: 'Euro', ratio: 0.18, Icon: CircleDollarSign },
+    { key: 'gbp', name: 'Pound', ratio: 0.17, Icon: Landmark },
+    { key: 'gram', name: 'Gram Altin', ratio: 0.25, Icon: Coins },
+    { key: 'silver', name: 'Gram Gumus', ratio: 0.12, Icon: Gem },
   ],
   Agresif: [
     { key: 'usd', name: 'Dolar', ratio: 0.32, Icon: BadgeDollarSign },
