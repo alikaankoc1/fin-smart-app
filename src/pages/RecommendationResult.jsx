@@ -1,4 +1,11 @@
-import { ArrowLeft, Bitcoin, Building2, Coins, Gem, Landmark, TrendingUp } from 'lucide-react'
+import {
+  ArrowLeft,
+  BadgeDollarSign,
+  CircleDollarSign,
+  Coins,
+  Gem,
+  Landmark,
+} from 'lucide-react'
 import useFinance from '../hooks/useFinance'
 
 const moneyFormatter = new Intl.NumberFormat('tr-TR', {
@@ -9,19 +16,25 @@ const moneyFormatter = new Intl.NumberFormat('tr-TR', {
 
 const allocationByRiskProfile = {
   Muhafazakar: [
-    { key: 'gold', name: 'Altin', ratio: 0.6, Icon: Coins },
-    { key: 'deposit', name: 'Mevduat', ratio: 0.3, Icon: Landmark },
-    { key: 'silver', name: 'Gumus', ratio: 0.1, Icon: Gem },
+    { key: 'usd', name: 'Dolar', ratio: 0.18, Icon: BadgeDollarSign },
+    { key: 'eur', name: 'Euro', ratio: 0.12, Icon: CircleDollarSign },
+    { key: 'gbp', name: 'Pound', ratio: 0.1, Icon: Landmark },
+    { key: 'gram', name: 'Gram Altin', ratio: 0.45, Icon: Coins },
+    { key: 'silver', name: 'Gram Gumus', ratio: 0.15, Icon: Gem },
   ],
   Dengeli: [
-    { key: 'stock', name: 'Hisse Senedi', ratio: 0.4, Icon: TrendingUp },
-    { key: 'usd', name: 'Dolar', ratio: 0.4, Icon: Building2 },
-    { key: 'gold', name: 'Altin', ratio: 0.2, Icon: Coins },
+    { key: 'usd', name: 'Dolar', ratio: 0.25, Icon: BadgeDollarSign },
+    { key: 'eur', name: 'Euro', ratio: 0.15, Icon: CircleDollarSign },
+    { key: 'gbp', name: 'Pound', ratio: 0.15, Icon: Landmark },
+    { key: 'gram', name: 'Gram Altin', ratio: 0.3, Icon: Coins },
+    { key: 'silver', name: 'Gram Gumus', ratio: 0.15, Icon: Gem },
   ],
   Agresif: [
-    { key: 'crypto', name: 'Kripto', ratio: 0.5, Icon: Bitcoin },
-    { key: 'foreign-stock', name: 'Yabanci Hisse', ratio: 0.4, Icon: TrendingUp },
-    { key: 'gold', name: 'Altin', ratio: 0.1, Icon: Coins },
+    { key: 'usd', name: 'Dolar', ratio: 0.32, Icon: BadgeDollarSign },
+    { key: 'eur', name: 'Euro', ratio: 0.2, Icon: CircleDollarSign },
+    { key: 'gbp', name: 'Pound', ratio: 0.18, Icon: Landmark },
+    { key: 'gram', name: 'Gram Altin', ratio: 0.2, Icon: Coins },
+    { key: 'silver', name: 'Gram Gumus', ratio: 0.1, Icon: Gem },
   ],
 }
 
