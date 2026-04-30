@@ -7,6 +7,7 @@ import {
   Landmark,
 } from 'lucide-react'
 import useFinance from '../hooks/useFinance'
+import { calculateScenarioProjection } from '../services/scenarioProjection'
 
 const moneyFormatter = new Intl.NumberFormat('tr-TR', {
   style: 'currency',
@@ -52,6 +53,34 @@ const allocationByRiskProfile = {
   ],
 }
 
+const volatilityByProfile = {
+  'Cok Muhafazakar': 0.8,
+  Muhafazakar: 0.9,
+  Dengeli: 1,
+  'Buyume Odakli': 1.1,
+  Agresif: 1.2,
+}
+
+const horizonByProfile = {
+  'Cok Muhafazakar': 1,
+  Muhafazakar: 1.5,
+  Dengeli: 2,
+  'Buyume Odakli': 2.5,
+  Agresif: 3,
+}
+
+function buildSyntheticSeries(baseAmount) {
+  const anchor = Number(baseAmount) || 0
+  const safeAnchor = Math.max(anchor, 1)
+  const factors = [0.95, 0.98, 1.01, 1.03, 1.02, 1.05, 1.04, 1.07, 1.06, 1.08]
+  const now = Date.now()
+
+  return factors.map((factor, index) => ({
+    timestamp: Math.floor((now - (factors.length - index) * 7 * 24 * 60 * 60 * 1000) / 1000),
+    close: safeAnchor * factor,
+  }))
+}
+
 export default function RecommendationResult({ onBack }) {
   const { riskProfile, totalBalance } = useFinance()
   const selectedProfile = allocationByRiskProfile[riskProfile]
@@ -83,21 +112,43 @@ export default function RecommendationResult({ onBack }) {
         </div>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          {allocation.map(({ key, name, ratio, Icon }) => (
-            <article
-              key={key}
-              className="rounded-2xl border border-slate-700 bg-slate-900/80 p-5 shadow-xl shadow-black/30"
-            >
-              <div className="mb-3 inline-flex rounded-lg bg-emerald-400/10 p-2 text-emerald-300">
-                <Icon size={20} />
-              </div>
-              <p className="text-sm text-slate-400">{name}</p>
-              <p className="mt-1 text-lg font-bold text-white">
-                {moneyFormatter.format(totalBalance * ratio)}
-              </p>
-              <p className="mt-1 text-sm text-emerald-300">%{Math.round(ratio * 100)}</p>
-            </article>
-          ))}
+          {allocation.map(({ key, name, ratio, Icon }) => {
+            const allocatedAmount = totalBalance * ratio
+            const scenario = calculateScenarioProjection({
+              principal: allocatedAmount,
+              series: buildSyntheticSeries(allocatedAmount),
+              horizonYears: horizonByProfile[selectedProfile] || 2,
+              volatilityMultiplier: volatilityByProfile[selectedProfile] || 1,
+            })
+
+            return (
+              <article
+                key={key}
+                className="rounded-2xl border border-slate-700 bg-slate-900/80 p-5 shadow-xl shadow-black/30"
+              >
+                <div className="mb-3 inline-flex rounded-lg bg-emerald-400/10 p-2 text-emerald-300">
+                  <Icon size={20} />
+                </div>
+                <p className="text-sm text-slate-400">{name}</p>
+                <p className="mt-1 text-lg font-bold text-white">
+                  {moneyFormatter.format(allocatedAmount)}
+                </p>
+                <p className="mt-1 text-sm text-emerald-300">%{Math.round(ratio * 100)}</p>
+
+                <div className="mt-4 space-y-1 rounded-xl border border-slate-700/80 bg-slate-950/40 p-3 text-xs">
+                  <p className="text-slate-400">
+                    Kotumser: <span className="font-semibold text-rose-300">{moneyFormatter.format(scenario.pessimistic)}</span>
+                  </p>
+                  <p className="text-slate-400">
+                    Baz: <span className="font-semibold text-emerald-300">{moneyFormatter.format(scenario.base)}</span>
+                  </p>
+                  <p className="text-slate-400">
+                    Iyimser: <span className="font-semibold text-cyan-300">{moneyFormatter.format(scenario.optimistic)}</span>
+                  </p>
+                </div>
+              </article>
+            )
+          })}
         </div>
       </section>
     </main>
