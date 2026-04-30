@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { ArrowLeft } from 'lucide-react'
+import LanguageSwitcher from '../components/LanguageSwitcher'
+import useLanguage from '../hooks/useLanguage'
 import {
   buildFallbackHistory,
   fetchInstrumentHistory,
@@ -40,25 +42,27 @@ function buildPath(points) {
     .join(' ')
 }
 
-function getTrendText(first, last) {
+function getTrendText(first, last, isEn = false) {
   const change = ((last - first) / first) * 100
 
   if (change > 6) {
-    return `Son donemde guclu bir yukselis egilimi var (${change.toFixed(2)}%).`
+    return isEn
+      ? `Strong upward momentum in recent period (${change.toFixed(2)}%).`
+      : `Son donemde guclu bir yukselis egilimi var (${change.toFixed(2)}%).`
   }
   if (change > 0) {
-    return `Son donemde pozitif ama dengeli bir hareket var (${change.toFixed(
-      2,
-    )}%).`
+    return isEn
+      ? `Positive but balanced movement in recent period (${change.toFixed(2)}%).`
+      : `Son donemde pozitif ama dengeli bir hareket var (${change.toFixed(2)}%).`
   }
   if (change > -6) {
-    return `Son donemde sinirli bir geri cekilme goruluyor (${change.toFixed(
-      2,
-    )}%).`
+    return isEn
+      ? `Limited pullback observed in recent period (${change.toFixed(2)}%).`
+      : `Son donemde sinirli bir geri cekilme goruluyor (${change.toFixed(2)}%).`
   }
-  return `Son donemde belirgin bir dusus trendi dikkat cekiyor (${change.toFixed(
-    2,
-  )}%).`
+  return isEn
+    ? `Notable downtrend in recent period (${change.toFixed(2)}%).`
+    : `Son donemde belirgin bir dusus trendi dikkat cekiyor (${change.toFixed(2)}%).`
 }
 
 function buildChartModel(series) {
@@ -104,6 +108,8 @@ function buildChartModel(series) {
 }
 
 export default function MarketTrendPage({ instrument, onBack }) {
+  const { language } = useLanguage()
+  const isEn = language === 'en'
   const [range, setRange] = useState('3m')
   const [interval, setInterval] = useState('1d')
   const [activeFilter, setActiveFilter] = useState('range:3m')
@@ -161,7 +167,7 @@ export default function MarketTrendPage({ instrument, onBack }) {
   }, [chartModel, path])
   const first = series[0]?.close ?? 0
   const last = series[series.length - 1]?.close ?? 0
-  const trendText = series.length > 1 ? getTrendText(first, last) : ''
+  const trendText = series.length > 1 ? getTrendText(first, last, isEn) : ''
   const activePoint = chartModel
     ? chartModel.points[hoverIndex ?? chartModel.points.length - 1]
     : null
@@ -176,13 +182,16 @@ export default function MarketTrendPage({ instrument, onBack }) {
             className="inline-flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm font-medium text-slate-200 hover:bg-slate-800"
           >
             <ArrowLeft size={16} />
-            Piyasa Ekranina Don
+            {isEn ? 'Back To Market' : 'Piyasa Ekranina Don'}
           </button>
+          <LanguageSwitcher />
 
           <div className="text-right">
             <h1 className="text-2xl font-bold text-white">{instrument.name} Trendi</h1>
             <p className="text-sm text-slate-400">
-              Belirli araliklarda fiyat hareketi analizi
+              {isEn
+                ? 'Price movement analysis across selected ranges'
+                : 'Belirli araliklarda fiyat hareketi analizi'}
             </p>
           </div>
         </div>
@@ -202,7 +211,11 @@ export default function MarketTrendPage({ instrument, onBack }) {
                   : 'bg-slate-800 text-slate-200 hover:bg-slate-700'
               }`}
             >
-              {option.label}
+              {isEn
+                ? option.id === '3m'
+                  ? 'Last 3 Months'
+                  : 'Last 6 Months'
+                : option.label}
             </button>
           ))}
           {intervalOptions.map((option) => (
@@ -219,19 +232,27 @@ export default function MarketTrendPage({ instrument, onBack }) {
                   : 'bg-slate-800 text-slate-200 hover:bg-slate-700'
               }`}
             >
-              {option.label}
+              {isEn
+                ? option.id === '1d'
+                  ? 'Daily'
+                  : 'Weekly'
+                : option.label}
             </button>
           ))}
         </div>
 
         <div className="rounded-2xl border border-slate-700 bg-slate-950 p-4">
-          {isLoading && <p className="text-sm text-slate-400">Grafik yukleniyor...</p>}
+          {isLoading && (
+            <p className="text-sm text-slate-400">
+              {isEn ? 'Loading chart...' : 'Grafik yukleniyor...'}
+            </p>
+          )}
           {error && <p className="text-sm text-rose-300">{error}</p>}
 
           {!isLoading && !error && chartModel && (
             <div className="space-y-3">
               <div className="flex flex-wrap items-center gap-4 rounded-xl border border-slate-800 bg-slate-900/70 px-3 py-2 text-sm">
-                <span className="text-slate-400">Secili Nokta</span>
+                <span className="text-slate-400">{isEn ? 'Selected Point' : 'Secili Nokta'}</span>
                 <span className="font-semibold text-emerald-300">
                   {dateFormatter.format(new Date(activePoint.timestamp * 1000))}
                 </span>
@@ -319,15 +340,18 @@ export default function MarketTrendPage({ instrument, onBack }) {
 
         {isFallbackMode && (
           <p className="mt-3 text-xs text-amber-300/90">
-            Gecmis veri kaynagina erisim saglanamadigi icin grafik gecici olarak
-            guncel fiyat etrafinda olusturulan trend ile gosteriliyor.
+            {isEn
+              ? 'History source unavailable, showing temporary trend around current price.'
+              : 'Gecmis veri kaynagina erisim saglanamadigi icin grafik gecici olarak guncel fiyat etrafinda olusturulan trend ile gosteriliyor.'}
           </p>
         )}
 
         {!isLoading && !error && series.length > 1 && (
           <div className="mt-4 rounded-2xl border border-slate-700/80 bg-slate-900/40 px-4 py-3 text-sm text-slate-300">
             <p className="mb-1">
-              Baslangic: <span className="font-semibold">{formatter.format(first)} TL</span> | Son:{' '}
+              {isEn ? 'Start' : 'Baslangic'}:{' '}
+              <span className="font-semibold">{formatter.format(first)} TL</span> |{' '}
+              {isEn ? 'End' : 'Son'}:{' '}
               <span className="font-semibold">{formatter.format(last)} TL</span>
             </p>
             <p>{trendText}</p>

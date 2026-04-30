@@ -1,8 +1,11 @@
 import { ArrowLeft } from 'lucide-react'
 import { useMemo, useState } from 'react'
+import LanguageSwitcher from '../components/LanguageSwitcher'
 import useFinance from '../hooks/useFinance'
+import useLanguage from '../hooks/useLanguage'
 
-const questions = [
+const questionsByLanguage = {
+  tr: [
   {
     id: 'investmentHorizon',
     text: 'Yatirim sureniz ne kadar?',
@@ -84,7 +87,91 @@ const questions = [
       { label: 'Maksimum kazanc', score: 5 },
     ],
   },
-]
+  ],
+  en: [
+    {
+      id: 'investmentHorizon',
+      text: 'What is your investment horizon?',
+      options: [
+        { label: '0-1 year', score: 1 },
+        { label: '1-3 years', score: 3 },
+        { label: '3+ years', score: 5 },
+      ],
+    },
+    {
+      id: 'drawdownTolerance',
+      text: 'How concerned would you be if your principal drops by 10%?',
+      options: [
+        { label: 'Very concerned', score: 1 },
+        { label: 'Somewhat concerned', score: 3 },
+        { label: 'Not concerned', score: 5 },
+      ],
+    },
+    {
+      id: 'incomeStability',
+      text: 'How stable is your income?',
+      options: [
+        { label: 'Unstable / uncertain', score: 1 },
+        { label: 'Partially stable', score: 3 },
+        { label: 'Very stable', score: 5 },
+      ],
+    },
+    {
+      id: 'liquidityNeed',
+      text: 'How likely are you to need this money soon?',
+      options: [
+        { label: 'High', score: 1 },
+        { label: 'Medium', score: 3 },
+        { label: 'Low', score: 5 },
+      ],
+    },
+    {
+      id: 'volatilityReaction',
+      text: 'What would you do if your portfolio drops 15% in one month?',
+      options: [
+        { label: 'Sell immediately', score: 1 },
+        { label: 'Sell some of it', score: 3 },
+        { label: 'Hold / add more', score: 5 },
+      ],
+    },
+    {
+      id: 'experience',
+      text: 'How would you describe your investment experience?',
+      options: [
+        { label: 'Beginner', score: 1 },
+        { label: 'Intermediate', score: 3 },
+        { label: 'Experienced', score: 5 },
+      ],
+    },
+    {
+      id: 'tracking',
+      text: 'How often can you monitor your portfolio?',
+      options: [
+        { label: 'Rarely', score: 1 },
+        { label: 'Weekly', score: 3 },
+        { label: 'Daily', score: 5 },
+      ],
+    },
+    {
+      id: 'returnPriority',
+      text: 'Which is your priority?',
+      options: [
+        { label: 'Capital safety', score: 1 },
+        { label: 'Balance', score: 3 },
+        { label: 'High return potential', score: 5 },
+      ],
+    },
+    {
+      id: 'goal',
+      text: 'What is your primary goal?',
+      options: [
+        { label: 'Protect my savings', score: 1 },
+        { label: 'Generate regular income', score: 3 },
+        { label: 'Maximize gains', score: 5 },
+      ],
+    },
+  ],
+}
 
 function parseAmountInput(rawValue) {
   const cleaned = rawValue.replace(/\s/g, '')
@@ -143,7 +230,13 @@ function calculateRiskProfile(totalScore) {
 }
 
 export default function TestCommandPage({ onBack, onComplete }) {
+  const { language } = useLanguage()
+  const isEn = language === 'en'
   const { setRiskProfile, setTotalBalance } = useFinance()
+  const questions = useMemo(
+    () => questionsByLanguage[language] || questionsByLanguage.tr,
+    [language],
+  )
   const [currentStep, setCurrentStep] = useState(-1)
   const [savingsAmount, setSavingsAmount] = useState('')
   const [answers, setAnswers] = useState({})
@@ -154,15 +247,20 @@ export default function TestCommandPage({ onBack, onComplete }) {
   const parsedSavingsAmount = parseAmountInput(savingsAmount)
   const hasValidAmount = parsedSavingsAmount > 0
   const progressText = useMemo(
-    () => (currentStep < 0 ? 'Hazirlik' : `${currentStep + 1} / ${questions.length}`),
-    [currentStep],
+    () =>
+      currentStep < 0
+        ? isEn
+          ? 'Setup'
+          : 'Hazirlik'
+        : `${currentStep + 1} / ${questions.length}`,
+    [currentStep, isEn, questions.length],
   )
   const progressPercent = useMemo(() => {
     if (currentStep < 0) {
       return 0
     }
     return ((currentStep + 1) / questions.length) * 100
-  }, [currentStep])
+  }, [currentStep, questions.length])
 
   const handleSelectOption = (score) => {
     setAnswers((prev) => ({
@@ -209,15 +307,20 @@ export default function TestCommandPage({ onBack, onComplete }) {
             className="inline-flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm font-medium text-slate-200 hover:bg-slate-800"
           >
             <ArrowLeft size={16} />
-            Piyasa Ekranina Don
+            {isEn ? 'Back To Market' : 'Piyasa Ekranina Don'}
           </button>
+          <LanguageSwitcher />
         </div>
 
-        <h1 className="text-2xl font-bold text-white md:text-3xl">Yatirim Profili Testi</h1>
-        <p className="mt-2 text-sm text-slate-400">Soru {progressText}</p>
+        <h1 className="text-2xl font-bold text-white md:text-3xl">
+          {isEn ? 'Investment Profile Test' : 'Yatirim Profili Testi'}
+        </h1>
+        <p className="mt-2 text-sm text-slate-400">
+          {isEn ? 'Question' : 'Soru'} {progressText}
+        </p>
         <div className="mt-4">
           <div className="mb-2 flex items-center justify-between text-xs text-slate-400">
-            <span>Ilerleme</span>
+            <span>{isEn ? 'Progress' : 'Ilerleme'}</span>
             <span>%{Math.round(progressPercent)}</span>
           </div>
           <div className="h-2 w-full overflow-hidden rounded-full bg-slate-800">
@@ -232,10 +335,14 @@ export default function TestCommandPage({ onBack, onComplete }) {
           {currentStep < 0 ? (
             <div>
               <h2 className="text-lg font-semibold text-white md:text-xl">
-                Birikim yapilacak tutar nedir?
+                {isEn
+                  ? 'What is the amount you want to invest?'
+                  : 'Birikim yapilacak tutar nedir?'}
               </h2>
               <p className="mt-2 text-sm text-slate-400">
-                Teste baslamadan once hedef tutari giriniz.
+                {isEn
+                  ? 'Enter your target amount before starting the test.'
+                  : 'Teste baslamadan once hedef tutari giriniz.'}
               </p>
               <div className="mt-4">
                 <input
@@ -243,7 +350,7 @@ export default function TestCommandPage({ onBack, onComplete }) {
                   inputMode="decimal"
                   value={savingsAmount}
                   onChange={(event) => setSavingsAmount(event.target.value)}
-                  placeholder="Orn: 100000"
+                  placeholder={isEn ? 'Ex: 100000' : 'Orn: 100000'}
                   className="w-full rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-emerald-400"
                 />
               </div>
@@ -282,7 +389,7 @@ export default function TestCommandPage({ onBack, onComplete }) {
               }
               className="rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-semibold text-slate-950 transition enabled:hover:bg-emerald-400 enabled:hover:shadow-[0_0_22px_rgba(52,211,153,0.45)] disabled:cursor-not-allowed disabled:opacity-40"
             >
-              {isLastStep ? 'Bitir' : 'Sonraki'}
+              {isLastStep ? (isEn ? 'Finish' : 'Bitir') : isEn ? 'Next' : 'Sonraki'}
             </button>
           </div>
         </div>

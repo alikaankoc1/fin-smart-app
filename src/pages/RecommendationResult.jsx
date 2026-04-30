@@ -7,6 +7,8 @@ import {
   Landmark,
 } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
+import LanguageSwitcher from '../components/LanguageSwitcher'
+import useLanguage from '../hooks/useLanguage'
 import useFinance from '../hooks/useFinance'
 import { fetchInstrumentHistory } from '../services/marketHistory'
 import { calculateScenarioProjection } from '../services/scenarioProjection'
@@ -101,35 +103,53 @@ function buildSyntheticSeries(baseAmount) {
   }))
 }
 
-function getAutoTrendComment(series, annualVolatility) {
+function getAutoTrendComment(series, annualVolatility, isEnglish = false) {
   if (!series || series.length < 2) {
-    return 'Son veriler sinirli, yorum guven seviyesi dusuk.'
+    return isEnglish
+      ? 'Recent data is limited, confidence is low.'
+      : 'Son veriler sinirli, yorum guven seviyesi dusuk.'
   }
 
   const first = Number(series[0]?.close) || 0
   const last = Number(series[series.length - 1]?.close) || 0
   if (first <= 0 || last <= 0) {
-    return 'Veri kalite sorunu nedeniyle trend yorumu sinirli.'
+    return isEnglish
+      ? 'Trend comment is limited due to data quality.'
+      : 'Veri kalite sorunu nedeniyle trend yorumu sinirli.'
   }
 
   const changePct = ((last - first) / first) * 100
-  const trendText =
-    changePct > 6
+  const trendText = isEnglish
+    ? changePct > 6
+      ? 'uptrend'
+      : changePct < -6
+        ? 'pullback'
+        : 'sideways movement'
+    : changePct > 6
       ? 'yukselis'
       : changePct < -6
         ? 'gerileme'
         : 'yatay-seyir'
-  const volText =
-    annualVolatility > 0.28
+  const volText = isEnglish
+    ? annualVolatility > 0.28
+      ? 'high volatility'
+      : annualVolatility > 0.16
+        ? 'moderate volatility'
+        : 'low volatility'
+    : annualVolatility > 0.28
       ? 'yuksek oynaklik'
       : annualVolatility > 0.16
         ? 'orta oynaklik'
         : 'dusuk oynaklik'
 
-  return `Son donemde ${trendText} ve ${volText} izleniyor.`
+  return isEnglish
+    ? `Recent data suggests ${trendText} with ${volText}.`
+    : `Son donemde ${trendText} ve ${volText} izleniyor.`
 }
 
 export default function RecommendationResult({ onBack }) {
+  const { language } = useLanguage()
+  const isEn = language === 'en'
   const { riskProfile, totalBalance } = useFinance()
   const [investmentMode, setInvestmentMode] = useState('mixed')
   const [singleAssetId, setSingleAssetId] = useState('usd')
@@ -169,7 +189,7 @@ export default function RecommendationResult({ onBack }) {
             })
             next[item.key] = {
               ...scenario,
-              comment: getAutoTrendComment(series, scenario.annualVolatility),
+              comment: getAutoTrendComment(series, scenario.annualVolatility, isEn),
             }
           } catch {
             const fallbackSeries = buildSyntheticSeries(principal)
@@ -181,7 +201,9 @@ export default function RecommendationResult({ onBack }) {
             })
             next[item.key] = {
               ...scenario,
-              comment: 'Canli gecmis veriye erisimde kesinti oldugu icin tahmini yorum kullaniliyor.',
+              comment: isEn
+                ? 'Live history unavailable, using fallback estimate.'
+                : 'Canli gecmis veriye erisimde kesinti oldugu icin tahmini yorum kullaniliyor.',
             }
           }
         }),
@@ -198,7 +220,7 @@ export default function RecommendationResult({ onBack }) {
     return () => {
       active = false
     }
-  }, [activeAllocation, selectedProfile, totalBalance])
+  }, [activeAllocation, isEn, selectedProfile, totalBalance])
 
   const portfolioBand = useMemo(() => {
     if (activeAllocation.length === 0) {
@@ -231,22 +253,29 @@ export default function RecommendationResult({ onBack }) {
             className="inline-flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm font-medium text-slate-200 hover:bg-slate-800"
           >
             <ArrowLeft size={16} />
-            Piyasa Ekranina Don
+            {isEn ? 'Back To Market' : 'Piyasa Ekranina Don'}
           </button>
+          <LanguageSwitcher />
           <div className="text-right">
-            <h1 className="text-2xl font-bold text-white md:text-3xl">Oneri Sonucu</h1>
+            <h1 className="text-2xl font-bold text-white md:text-3xl">
+              {isEn ? 'Recommendation Result' : 'Oneri Sonucu'}
+            </h1>
             <p className="text-sm text-slate-400">
-              Risk profili: <span className="font-semibold text-emerald-300">{selectedProfile}</span>
+              {isEn ? 'Risk profile' : 'Risk profili'}:{' '}
+              <span className="font-semibold text-emerald-300">{selectedProfile}</span>
             </p>
             <p className="text-sm text-slate-400">
-              Toplam bakiye: <span className="font-semibold text-white">{moneyFormatter.format(totalBalance)}</span>
+              {isEn ? 'Total balance' : 'Toplam bakiye'}:{' '}
+              <span className="font-semibold text-white">{moneyFormatter.format(totalBalance)}</span>
             </p>
           </div>
         </div>
 
         <div className="mb-6 rounded-2xl border border-emerald-300/20 bg-emerald-400/5 p-4">
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-            <p className="text-sm text-slate-300">Yatirim modu secimi</p>
+            <p className="text-sm text-slate-300">
+              {isEn ? 'Investment mode' : 'Yatirim modu secimi'}
+            </p>
             <div className="inline-flex rounded-xl border border-slate-700 bg-slate-900/60 p-1">
               {modeOptions.map((option) => (
                 <button
@@ -259,7 +288,11 @@ export default function RecommendationResult({ onBack }) {
                       : 'text-slate-300 hover:bg-slate-800'
                   }`}
                 >
-                  {option.label}
+                  {isEn
+                    ? option.id === 'mixed'
+                      ? 'Auto Basket'
+                      : 'Single Asset'
+                    : option.label}
                 </button>
               ))}
             </div>
@@ -267,14 +300,18 @@ export default function RecommendationResult({ onBack }) {
 
           <p className="mb-2 text-xs text-slate-400">
             {investmentMode === 'mixed'
-              ? 'Otomatik Sepet secili: risk profiline gore dagilim gosteriliyor.'
-              : 'Tek Varlik secili: portfoyun tamami secilen varliga atanir.'}
+              ? isEn
+                ? 'Auto Basket selected: allocation is based on your risk profile.'
+                : 'Otomatik Sepet secili: risk profiline gore dagilim gosteriliyor.'
+              : isEn
+                ? 'Single Asset selected: entire portfolio is assigned to selected asset.'
+                : 'Tek Varlik secili: portfoyun tamami secilen varliga atanir.'}
           </p>
 
           {investmentMode === 'single' && (
             <div className="mb-3 flex flex-wrap items-center gap-2">
               <label htmlFor="single-asset" className="text-xs text-slate-400">
-                Tek varlik secimi
+                {isEn ? 'Single asset selection' : 'Tek varlik secimi'}
               </label>
               <select
                 id="single-asset"
@@ -291,16 +328,23 @@ export default function RecommendationResult({ onBack }) {
             </div>
           )}
 
-          <p className="text-sm text-slate-300">Toplam Portfoy Projeksiyonu (Ust Bant)</p>
+          <p className="text-sm text-slate-300">
+            {isEn
+              ? 'Total Portfolio Projection (Top Band)'
+              : 'Toplam Portfoy Projeksiyonu (Ust Bant)'}
+          </p>
           <div className="mt-2 grid grid-cols-1 gap-2 text-sm md:grid-cols-3">
             <p className="rounded-lg border border-slate-700 bg-slate-900/70 px-3 py-2 text-slate-300">
-              Kotumser: <span className="font-semibold text-rose-300">{moneyFormatter.format(portfolioBand.pessimistic)}</span>
+              {isEn ? 'Pessimistic' : 'Kotumser'}:{' '}
+              <span className="font-semibold text-rose-300">{moneyFormatter.format(portfolioBand.pessimistic)}</span>
             </p>
             <p className="rounded-lg border border-slate-700 bg-slate-900/70 px-3 py-2 text-slate-300">
-              Baz: <span className="font-semibold text-emerald-300">{moneyFormatter.format(portfolioBand.base)}</span>
+              {isEn ? 'Base' : 'Baz'}:{' '}
+              <span className="font-semibold text-emerald-300">{moneyFormatter.format(portfolioBand.base)}</span>
             </p>
             <p className="rounded-lg border border-slate-700 bg-slate-900/70 px-3 py-2 text-slate-300">
-              Iyimser: <span className="font-semibold text-cyan-300">{moneyFormatter.format(portfolioBand.optimistic)}</span>
+              {isEn ? 'Optimistic' : 'Iyimser'}:{' '}
+              <span className="font-semibold text-cyan-300">{moneyFormatter.format(portfolioBand.optimistic)}</span>
             </p>
           </div>
         </div>
@@ -330,25 +374,40 @@ export default function RecommendationResult({ onBack }) {
                 </p>
                 <p className="mt-1 text-sm text-emerald-300">
                   %{Math.round(ratio * 100)}{' '}
-                  {investmentMode === 'single' ? '(Tum portfoy)' : ''}
+                  {investmentMode === 'single'
+                    ? isEn
+                      ? '(Full portfolio)'
+                      : '(Tum portfoy)'
+                    : ''}
                 </p>
 
                 <div className="mt-4 space-y-1 rounded-xl border border-slate-700/80 bg-slate-950/40 p-3 text-xs">
                   {scenario ? (
                     <>
                       <p className="text-slate-400">
-                        Kotumser: <span className="font-semibold text-rose-300">{moneyFormatter.format(scenario.pessimistic)}</span>
+                        {isEn ? 'Pessimistic' : 'Kotumser'}:{' '}
+                        <span className="font-semibold text-rose-300">{moneyFormatter.format(scenario.pessimistic)}</span>
                       </p>
                       <p className="text-slate-400">
-                        Baz: <span className="font-semibold text-emerald-300">{moneyFormatter.format(scenario.base)}</span>
+                        {isEn ? 'Base' : 'Baz'}:{' '}
+                        <span className="font-semibold text-emerald-300">{moneyFormatter.format(scenario.base)}</span>
                       </p>
                       <p className="text-slate-400">
-                        Iyimser: <span className="font-semibold text-cyan-300">{moneyFormatter.format(scenario.optimistic)}</span>
+                        {isEn ? 'Optimistic' : 'Iyimser'}:{' '}
+                        <span className="font-semibold text-cyan-300">{moneyFormatter.format(scenario.optimistic)}</span>
                       </p>
                       <p className="pt-1 text-slate-500">{scenario.comment}</p>
                     </>
                   ) : (
-                    <p className="text-slate-500">{loading ? 'Senaryo hesaplanıyor...' : 'Senaryo hesaplanamadi.'}</p>
+                    <p className="text-slate-500">
+                      {loading
+                        ? isEn
+                          ? 'Calculating scenarios...'
+                          : 'Senaryo hesaplanıyor...'
+                        : isEn
+                          ? 'Scenario could not be calculated.'
+                          : 'Senaryo hesaplanamadi.'}
+                    </p>
                   )}
                 </div>
               </article>

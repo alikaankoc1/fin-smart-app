@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { RefreshCw } from 'lucide-react'
+import LanguageSwitcher from '../components/LanguageSwitcher'
+import useLanguage from '../hooks/useLanguage'
 import { fetchMarketBoardData } from '../services/marketData'
 
 const moneyFormatter = new Intl.NumberFormat('tr-TR', {
@@ -8,6 +10,8 @@ const moneyFormatter = new Intl.NumberFormat('tr-TR', {
 })
 
 export default function MarketBoardPage({ onSelectInstrument, onGoTestPage }) {
+  const { language } = useLanguage()
+  const isEn = language === 'en'
   const [rows, setRows] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
@@ -20,9 +24,9 @@ export default function MarketBoardPage({ onSelectInstrument, onGoTestPage }) {
       setRows(data)
       setLastUpdated(new Date())
     } catch (err) {
-      setError(err.message || 'Veri alinirken bir hata olustu.')
+      setError(err.message || (isEn ? 'Failed to load market data.' : 'Veri alinirken bir hata olustu.'))
     }
-  }, [])
+  }, [isEn])
 
   const handleRefresh = async () => {
     setIsLoading(true)
@@ -56,8 +60,8 @@ export default function MarketBoardPage({ onSelectInstrument, onGoTestPage }) {
     if (!lastUpdated) {
       return '-'
     }
-    return lastUpdated.toLocaleTimeString('tr-TR')
-  }, [lastUpdated])
+    return lastUpdated.toLocaleTimeString(isEn ? 'en-US' : 'tr-TR')
+  }, [isEn, lastUpdated])
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950 px-4 py-8">
@@ -65,24 +69,30 @@ export default function MarketBoardPage({ onSelectInstrument, onGoTestPage }) {
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
           <div>
             <h1 className="text-2xl font-bold text-white md:text-3xl">
-              Canli Alis / Satis Ekrani
+              {isEn ? 'Live Buy / Sell Board' : 'Canli Alis / Satis Ekrani'}
             </h1>
             <p className="text-sm text-slate-400">
-              Ucretsiz kaynaklardan dakikalik guncellenen piyasa gorunumu
+              {isEn
+                ? 'Minute-level market view from free data sources'
+                : 'Ucretsiz kaynaklardan dakikalik guncellenen piyasa gorunumu'}
             </p>
           </div>
-          <button
-            type="button"
-            onClick={handleRefresh}
-            className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-emerald-400"
-          >
-            <RefreshCw size={16} />
-            Yenile
-          </button>
+          <div className="flex items-center gap-2">
+            <LanguageSwitcher />
+            <button
+              type="button"
+              onClick={handleRefresh}
+              className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-emerald-400"
+            >
+              <RefreshCw size={16} />
+              {isEn ? 'Refresh' : 'Yenile'}
+            </button>
+          </div>
         </div>
 
         <div className="mb-4 text-sm text-slate-400">
-          Son guncelleme: <span className="font-semibold text-emerald-300">{lastUpdatedText}</span>
+          {isEn ? 'Last update' : 'Son guncelleme'}:{' '}
+          <span className="font-semibold text-emerald-300">{lastUpdatedText}</span>
         </div>
 
         {error && (
@@ -96,13 +106,13 @@ export default function MarketBoardPage({ onSelectInstrument, onGoTestPage }) {
             <thead>
               <tr className="bg-slate-800">
                 <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-300">
-                  Varlik
+                  {isEn ? 'Asset' : 'Varlik'}
                 </th>
                 <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-emerald-300">
-                  Alis (TL)
+                  {isEn ? 'Buy (TRY)' : 'Alis (TL)'}
                 </th>
                 <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-rose-300">
-                  Satis (TL)
+                  {isEn ? 'Sell (TRY)' : 'Satis (TL)'}
                 </th>
               </tr>
             </thead>
@@ -129,14 +139,14 @@ export default function MarketBoardPage({ onSelectInstrument, onGoTestPage }) {
               {!isLoading && rows.length === 0 && (
                 <tr>
                   <td colSpan={3} className="px-4 py-8 text-center text-sm text-slate-400">
-                    Gosterilecek veri bulunamadi.
+                    {isEn ? 'No data to display.' : 'Gosterilecek veri bulunamadi.'}
                   </td>
                 </tr>
               )}
               {isLoading && (
                 <tr>
                   <td colSpan={3} className="px-4 py-8 text-center text-sm text-slate-400">
-                    Piyasa verileri yukleniyor...
+                    {isEn ? 'Loading market data...' : 'Piyasa verileri yukleniyor...'}
                   </td>
                 </tr>
               )}
@@ -146,15 +156,16 @@ export default function MarketBoardPage({ onSelectInstrument, onGoTestPage }) {
 
         <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-700/80 bg-slate-900/40 px-4 py-3">
           <p className="text-sm text-slate-400">
-            Size daha isabetli oneriler sunabilmemiz icin kisa profil anketimize
-            katilmanizi oneririz.
+            {isEn
+              ? 'For better recommendations, we suggest completing the short profile test.'
+              : 'Size daha isabetli oneriler sunabilmemiz icin kisa profil anketimize katilmanizi oneririz.'}
           </p>
           <button
             type="button"
             onClick={() => onGoTestPage?.()}
             className="rounded-lg border border-emerald-400/40 bg-emerald-400/10 px-4 py-2 text-sm font-medium text-emerald-300 transition hover:bg-emerald-400/20"
           >
-            Teste Git
+            {isEn ? 'Go To Test' : 'Teste Git'}
           </button>
         </div>
       </section>

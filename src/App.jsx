@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { FinanceProvider } from './context/FinanceContext'
+import { LanguageProvider } from './context/LanguageContext'
 import LoginPage from './pages/LoginPage'
 import MarketBoardPage from './pages/MarketBoardPage'
 import MarketTrendPage from './pages/MarketTrendPage'
@@ -65,28 +66,30 @@ function App() {
   }
 
   return (
-    <FinanceProvider>
-      {!isAuthenticated ? (
-        <LoginPage onLogin={handleLogin} />
-      ) : activePage === 'test' ? (
-        <TestCommandPage
-          onBack={handleBackToBoard}
-          onComplete={() => navigateTo('recommendation')}
-        />
-      ) : activePage === 'recommendation' ? (
-        <RecommendationResult onBack={handleBackToBoard} />
-      ) : activePage === 'trend' && selectedInstrument ? (
-        <MarketTrendPage
-          instrument={selectedInstrument}
-          onBack={handleBackToBoard}
-        />
-      ) : (
-        <MarketBoardPage
-          onSelectInstrument={handleOpenTrend}
-          onGoTestPage={() => navigateTo('test')}
-        />
-      )}
-    </FinanceProvider>
+    <LanguageProvider>
+      <FinanceProvider>
+        {!isAuthenticated ? (
+          <LoginPage onLogin={handleLogin} />
+        ) : activePage === 'test' ? (
+          <TestCommandPage
+            onBack={handleBackToBoard}
+            onComplete={() => navigateTo('recommendation')}
+          />
+        ) : activePage === 'recommendation' ? (
+          <RecommendationResult onBack={handleBackToBoard} />
+        ) : activePage === 'trend' && selectedInstrument ? (
+          <MarketTrendPage
+            instrument={selectedInstrument}
+            onBack={handleBackToBoard}
+          />
+        ) : (
+          <MarketBoardPage
+            onSelectInstrument={handleOpenTrend}
+            onGoTestPage={() => navigateTo('test')}
+          />
+        )}
+      </FinanceProvider>
+    </LanguageProvider>
   )
 }
 
