@@ -305,7 +305,13 @@ export default function RecommendationResult({ onBack }) {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        <div
+          className={
+            investmentMode === 'single'
+              ? 'grid grid-cols-1 gap-4 md:mx-auto md:max-w-md'
+              : 'grid grid-cols-1 gap-4 md:grid-cols-3'
+          }
+        >
           {activeAllocation.map(({ key, name, ratio, Icon }) => {
             const allocatedAmount = totalBalance * ratio
             const scenario = scenarioByAsset[key]
@@ -322,7 +328,10 @@ export default function RecommendationResult({ onBack }) {
                 <p className="mt-1 text-lg font-bold text-white">
                   {moneyFormatter.format(allocatedAmount)}
                 </p>
-                <p className="mt-1 text-sm text-emerald-300">%{Math.round(ratio * 100)}</p>
+                <p className="mt-1 text-sm text-emerald-300">
+                  %{Math.round(ratio * 100)}{' '}
+                  {investmentMode === 'single' ? '(Tum portfoy)' : ''}
+                </p>
 
                 <div className="mt-4 space-y-1 rounded-xl border border-slate-700/80 bg-slate-950/40 p-3 text-xs">
                   {scenario ? (
