@@ -84,6 +84,11 @@ const singleAssetOptions = [
   { id: 'silver', label: 'Gram Gumus' },
 ]
 
+const singleAssetCatalog = allocationByRiskProfile.Dengeli.reduce((acc, item) => {
+  acc[item.key] = { ...item, ratio: 1 }
+  return acc
+}, {})
+
 function buildSyntheticSeries(baseAmount) {
   const anchor = Number(baseAmount) || 0
   const safeAnchor = Math.max(anchor, 1)
@@ -132,6 +137,13 @@ export default function RecommendationResult({ onBack }) {
     ? riskProfile
     : 'Dengeli'
   const allocation = allocationByRiskProfile[selectedProfile]
+  const activeAllocation = useMemo(() => {
+    if (investmentMode === 'single') {
+      const selectedAsset = singleAssetCatalog[singleAssetId]
+      return selectedAsset ? [selectedAsset] : []
+    }
+    return allocation
+  }, [allocation, investmentMode, singleAssetId])
   const [scenarioByAsset, setScenarioByAsset] = useState({})
   const [loading, setLoading] = useState(true)
 
@@ -145,7 +157,7 @@ export default function RecommendationResult({ onBack }) {
       const volatilityMultiplier = volatilityByProfile[selectedProfile] || 1
 
       await Promise.all(
-        allocation.map(async (item) => {
+        activeAllocation.map(async (item) => {
           const principal = totalBalance * item.ratio
           try {
             const series = await fetchInstrumentHistory(item.instrumentId, '6m', '1wk')
@@ -186,14 +198,14 @@ export default function RecommendationResult({ onBack }) {
     return () => {
       active = false
     }
-  }, [allocation, selectedProfile, totalBalance])
+  }, [activeAllocation, selectedProfile, totalBalance])
 
   const portfolioBand = useMemo(() => {
-    if (allocation.length === 0) {
+    if (activeAllocation.length === 0) {
       return { pessimistic: 0, base: 0, optimistic: 0 }
     }
 
-    return allocation.reduce(
+    return activeAllocation.reduce(
       (totals, item) => {
         const scenario = scenarioByAsset[item.key]
         if (!scenario) {
@@ -207,7 +219,7 @@ export default function RecommendationResult({ onBack }) {
       },
       { pessimistic: 0, base: 0, optimistic: 0 },
     )
-  }, [allocation, scenarioByAsset])
+  }, [activeAllocation, scenarioByAsset])
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950 px-4 py-8">
@@ -256,7 +268,7 @@ export default function RecommendationResult({ onBack }) {
           <p className="mb-2 text-xs text-slate-400">
             {investmentMode === 'mixed'
               ? 'Otomatik Sepet secili: risk profiline gore dagilim gosteriliyor.'
-              : 'Tek Varlik secili: bir sonraki adimda tek varlik secim arayuzu eklenecek.'}
+              : 'Tek Varlik secili: portfoyun tamami secilen varliga atanir.'}
           </p>
 
           {investmentMode === 'single' && (
@@ -294,7 +306,7 @@ export default function RecommendationResult({ onBack }) {
         </div>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          {allocation.map(({ key, name, ratio, Icon }) => {
+          {activeAllocation.map(({ key, name, ratio, Icon }) => {
             const allocatedAmount = totalBalance * ratio
             const scenario = scenarioByAsset[key]
 
