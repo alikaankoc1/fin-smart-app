@@ -71,6 +71,11 @@ const horizonByProfile = {
   Agresif: 3,
 }
 
+const modeOptions = [
+  { id: 'mixed', label: 'Otomatik Sepet' },
+  { id: 'single', label: 'Tek Varlik' },
+]
+
 function buildSyntheticSeries(baseAmount) {
   const anchor = Number(baseAmount) || 0
   const safeAnchor = Math.max(anchor, 1)
@@ -113,6 +118,7 @@ function getAutoTrendComment(series, annualVolatility) {
 
 export default function RecommendationResult({ onBack }) {
   const { riskProfile, totalBalance } = useFinance()
+  const [investmentMode, setInvestmentMode] = useState('mixed')
   const selectedProfile = allocationByRiskProfile[riskProfile]
     ? riskProfile
     : 'Dengeli'
@@ -218,6 +224,32 @@ export default function RecommendationResult({ onBack }) {
         </div>
 
         <div className="mb-6 rounded-2xl border border-emerald-300/20 bg-emerald-400/5 p-4">
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+            <p className="text-sm text-slate-300">Yatirim modu secimi</p>
+            <div className="inline-flex rounded-xl border border-slate-700 bg-slate-900/60 p-1">
+              {modeOptions.map((option) => (
+                <button
+                  key={option.id}
+                  type="button"
+                  onClick={() => setInvestmentMode(option.id)}
+                  className={`rounded-lg px-3 py-1.5 text-xs font-medium transition ${
+                    investmentMode === option.id
+                      ? 'bg-emerald-500 text-slate-950'
+                      : 'text-slate-300 hover:bg-slate-800'
+                  }`}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <p className="mb-2 text-xs text-slate-400">
+            {investmentMode === 'mixed'
+              ? 'Otomatik Sepet secili: risk profiline gore dagilim gosteriliyor.'
+              : 'Tek Varlik secili: bir sonraki adimda tek varlik secim arayuzu eklenecek.'}
+          </p>
+
           <p className="text-sm text-slate-300">Toplam Portfoy Projeksiyonu (Ust Bant)</p>
           <div className="mt-2 grid grid-cols-1 gap-2 text-sm md:grid-cols-3">
             <p className="rounded-lg border border-slate-700 bg-slate-900/70 px-3 py-2 text-slate-300">
