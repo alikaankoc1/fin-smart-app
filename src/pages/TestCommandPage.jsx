@@ -20,6 +20,43 @@ const questions = [
   },
 ]
 
+function parseAmountInput(rawValue) {
+  const cleaned = rawValue.replace(/\s/g, '')
+  if (!cleaned) {
+    return 0
+  }
+
+  // Handles grouped thousands like 100.000 or 100,000
+  if (/^\d{1,3}([.,]\d{3})+$/.test(cleaned)) {
+    return Number(cleaned.replace(/[.,]/g, ''))
+  }
+
+  const hasDot = cleaned.includes('.')
+  const hasComma = cleaned.includes(',')
+
+  if (hasDot && hasComma) {
+    const lastDot = cleaned.lastIndexOf('.')
+    const lastComma = cleaned.lastIndexOf(',')
+    const decimalSeparator = lastDot > lastComma ? '.' : ','
+    const thousandsSeparator = decimalSeparator === '.' ? ',' : '.'
+    const normalized = cleaned
+      .replaceAll(thousandsSeparator, '')
+      .replace(decimalSeparator, '.')
+    return Number(normalized) || 0
+  }
+
+  if (hasComma || hasDot) {
+    const separator = hasComma ? ',' : '.'
+    const parts = cleaned.split(separator)
+    if (parts.length === 2 && parts[1].length === 3 && parts[0].length >= 1) {
+      return Number(parts.join('')) || 0
+    }
+    return Number(cleaned.replace(',', '.')) || 0
+  }
+
+  return Number(cleaned) || 0
+}
+
 function calculateRiskProfile(investmentHorizon, drawdownTolerance) {
   if (investmentHorizon === 'Kisa Vadeli' && drawdownTolerance === 'Cok') {
     return 'Muhafazakar'
@@ -39,7 +76,8 @@ export default function TestCommandPage({ onBack, onComplete }) {
   const currentQuestion = currentStep >= 0 ? questions[currentStep] : null
   const selectedOption = currentQuestion ? answers[currentQuestion.id] : null
   const isLastStep = currentStep === questions.length - 1
-  const hasValidAmount = Number(savingsAmount) > 0
+  const parsedSavingsAmount = parseAmountInput(savingsAmount)
+  const hasValidAmount = parsedSavingsAmount > 0
   const progressText = useMemo(
     () => (currentStep < 0 ? 'Hazirlik' : `${currentStep + 1} / ${questions.length}`),
     [currentStep],
@@ -77,7 +115,7 @@ export default function TestCommandPage({ onBack, onComplete }) {
         answers.drawdownTolerance,
       )
       setRiskProfile(profile)
-      setTotalBalance(Number(savingsAmount) || 0)
+      setTotalBalance(parsedSavingsAmount)
       onComplete?.()
       return
     }
@@ -125,9 +163,8 @@ export default function TestCommandPage({ onBack, onComplete }) {
               </p>
               <div className="mt-4">
                 <input
-                  type="number"
-                  min="0"
-                  step="0.01"
+                  type="text"
+                  inputMode="decimal"
                   value={savingsAmount}
                   onChange={(event) => setSavingsAmount(event.target.value)}
                   placeholder="Orn: 100000"
