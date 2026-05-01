@@ -147,6 +147,43 @@ function getAutoTrendComment(series, annualVolatility, isEnglish = false) {
     : `Son donemde ${trendText} ve ${volText} izleniyor.`
 }
 
+function getVolatilityAlert(annualVolatility, isEnglish = false) {
+  if (!Number.isFinite(annualVolatility)) {
+    return null
+  }
+
+  if (annualVolatility >= 0.28) {
+    return {
+      level: 'high',
+      label: isEnglish ? 'High volatility risk' : 'Yuksek volatilite riski',
+      detail: isEnglish
+        ? 'Sharp price swings are likely in this asset.'
+        : 'Bu varlikta sert fiyat hareketleri gorulebilir.',
+      className: 'border-rose-400/40 bg-rose-400/10 text-rose-200',
+    }
+  }
+
+  if (annualVolatility >= 0.16) {
+    return {
+      level: 'medium',
+      label: isEnglish ? 'Medium volatility' : 'Orta volatilite',
+      detail: isEnglish
+        ? 'Moderate fluctuations are expected; monitor regularly.'
+        : 'Orta duzey dalgalanma beklenir; duzenli takip edin.',
+      className: 'border-amber-400/40 bg-amber-400/10 text-amber-200',
+    }
+  }
+
+  return {
+    level: 'low',
+    label: isEnglish ? 'Low volatility' : 'Dusuk volatilite',
+    detail: isEnglish
+      ? 'Price movements are relatively stable for now.'
+      : 'Fiyat hareketleri su an gorece daha stabil.',
+    className: 'border-emerald-400/40 bg-emerald-400/10 text-emerald-200',
+  }
+}
+
 export default function RecommendationResult({ onBack }) {
   const { language } = useLanguage()
   const isEn = language === 'en'
@@ -359,6 +396,9 @@ export default function RecommendationResult({ onBack }) {
           {activeAllocation.map(({ key, name, ratio, Icon }) => {
             const allocatedAmount = totalBalance * ratio
             const scenario = scenarioByAsset[key]
+            const volatilityAlert = scenario
+              ? getVolatilityAlert(scenario.annualVolatility, isEn)
+              : null
 
             return (
               <article
@@ -384,6 +424,12 @@ export default function RecommendationResult({ onBack }) {
                 <div className="mt-4 space-y-1 rounded-xl border border-slate-700/80 bg-slate-950/40 p-3 text-xs">
                   {scenario ? (
                     <>
+                      {volatilityAlert && (
+                        <div className={`mb-2 rounded-lg border px-2.5 py-2 ${volatilityAlert.className}`}>
+                          <p className="font-semibold">{volatilityAlert.label}</p>
+                          <p className="mt-0.5 text-[11px] opacity-90">{volatilityAlert.detail}</p>
+                        </div>
+                      )}
                       <p className="text-slate-400">
                         {isEn ? 'Pessimistic' : 'Kotumser'}:{' '}
                         <span className="font-semibold text-rose-300">{moneyFormatter.format(scenario.pessimistic)}</span>
