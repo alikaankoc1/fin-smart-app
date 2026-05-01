@@ -282,7 +282,7 @@ export default function RecommendationResult({ onBack }) {
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950 px-4 py-8">
-      <section className="w-full max-w-5xl rounded-3xl border border-emerald-200/20 bg-slate-900/70 p-6 shadow-2xl shadow-black/40 backdrop-blur md:p-10">
+      <section className="w-full max-w-6xl rounded-3xl border border-emerald-200/20 bg-slate-900/70 p-6 shadow-2xl shadow-black/40 backdrop-blur md:p-10">
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
           <button
             type="button"
@@ -389,8 +389,8 @@ export default function RecommendationResult({ onBack }) {
         <div
           className={
             investmentMode === 'single'
-              ? 'grid grid-cols-1 gap-4 md:mx-auto md:max-w-md'
-              : 'grid grid-cols-1 gap-4 md:grid-cols-3'
+              ? 'grid grid-cols-1 gap-5 md:mx-auto md:max-w-lg'
+              : 'grid grid-cols-1 gap-5 md:grid-cols-3'
           }
         >
           {activeAllocation.map(({ key, name, ratio, Icon }) => {
@@ -403,16 +403,16 @@ export default function RecommendationResult({ onBack }) {
             return (
               <article
                 key={key}
-                className="rounded-2xl border border-slate-700 bg-slate-900/80 p-5 shadow-xl shadow-black/30"
+                className="rounded-2xl border border-slate-700 bg-slate-900/80 p-6 shadow-xl shadow-black/30 md:p-6"
               >
                 <div className="mb-3 inline-flex rounded-lg bg-emerald-400/10 p-2 text-emerald-300">
-                  <Icon size={20} />
+                  <Icon size={22} />
                 </div>
-                <p className="text-sm text-slate-400">{name}</p>
-                <p className="mt-1 text-lg font-bold text-white">
+                <p className="text-base text-slate-300">{name}</p>
+                <p className="mt-1 text-2xl font-bold text-white">
                   {moneyFormatter.format(allocatedAmount)}
                 </p>
-                <p className="mt-1 text-sm text-emerald-300">
+                <p className="mt-2 text-base text-emerald-300">
                   %{Math.round(ratio * 100)}{' '}
                   {investmentMode === 'single'
                     ? isEn
@@ -421,31 +421,31 @@ export default function RecommendationResult({ onBack }) {
                     : ''}
                 </p>
 
-                <div className="mt-4 space-y-1 rounded-xl border border-slate-700/80 bg-slate-950/40 p-3 text-xs">
+                <div className="mt-5 space-y-2 rounded-xl border border-slate-700/80 bg-slate-950/40 p-4 text-sm">
                   {scenario ? (
                     <>
                       {volatilityAlert && (
-                        <div className={`mb-2 rounded-lg border px-2.5 py-2 ${volatilityAlert.className}`}>
-                          <p className="font-semibold">{volatilityAlert.label}</p>
-                          <p className="mt-0.5 text-[11px] opacity-90">{volatilityAlert.detail}</p>
+                        <div className={`mb-2 rounded-lg border px-3 py-2.5 ${volatilityAlert.className}`}>
+                          <p className="text-sm font-semibold">{volatilityAlert.label}</p>
+                          <p className="mt-1 text-xs opacity-90">{volatilityAlert.detail}</p>
                         </div>
                       )}
-                      <p className="text-slate-400">
+                      <p className="text-slate-300">
                         {isEn ? 'Pessimistic' : 'Kotumser'}:{' '}
                         <span className="font-semibold text-rose-300">{moneyFormatter.format(scenario.pessimistic)}</span>
                       </p>
-                      <p className="text-slate-400">
+                      <p className="text-slate-300">
                         {isEn ? 'Base' : 'Baz'}:{' '}
                         <span className="font-semibold text-emerald-300">{moneyFormatter.format(scenario.base)}</span>
                       </p>
-                      <p className="text-slate-400">
+                      <p className="text-slate-300">
                         {isEn ? 'Optimistic' : 'Iyimser'}:{' '}
                         <span className="font-semibold text-cyan-300">{moneyFormatter.format(scenario.optimistic)}</span>
                       </p>
-                      <p className="pt-1 text-slate-500">{scenario.comment}</p>
+                      <p className="pt-1 text-sm text-slate-400">{scenario.comment}</p>
                     </>
                   ) : (
-                    <p className="text-slate-500">
+                    <p className="text-sm text-slate-500">
                       {loading
                         ? isEn
                           ? 'Calculating scenarios...'
