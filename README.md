@@ -1,16 +1,73 @@
-# React + Vite
+# Fin Smart App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Bu proje, Dumlupinar Universitesi Bilgisayar Muhendisligi bitirme projesi kapsaminda gelistirilmistir.
 
-Currently, two official plugins are available:
+## Proje Bilgisi
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Ogrenci:** Ali Kaan Koc
+- **Universite:** Dumlupinar Universitesi
+- **Bolum:** Bilgisayar Muhendisligi
+- **Proje Konusu:** Kullanici risk profiline gore yatirim dagilimi ve senaryo bazli finansal oneriler
 
-## React Compiler
+## Proje Ozeti
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Fin Smart App; kullanicidan birikim tutari ve risk profili bilgilerini alarak:
 
-## Expanding the ESLint configuration
+- Risk profiline uygun portfoy dagilimi sunar,
+- Canli piyasa verilerine dayali senaryo projeksiyonu hesaplar,
+- Varlik kartlarinda volatiliteye gore risk uyarisi gosterir,
+- Sonuc ekraninda varlik bazli kotumser / baz / iyimser tahminler uretir.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Kullanilan Teknolojiler
+
+- React
+- Vite
+- Tailwind CSS
+- Lucide React
+
+## Projeyi Calistirma Adimlari
+
+### 1) Gereksinimler
+
+- Node.js (onerilen: LTS surumu)
+- npm
+
+### 2) Projeyi indirme
+
+```bash
+git clone <repo-url>
+cd fin-smart-app
+```
+
+> Proje zaten bilgisayarinizda varsa bu adimi atlayabilirsiniz.
+
+### 3) Bagimliliklari yukleme
+
+```bash
+npm install
+```
+
+### 4) Gelistirme ortamini baslatma
+
+```bash
+npm run dev
+```
+
+Ardindan terminalde verilen adrese gidin (genellikle `http://localhost:5173`).
+
+### 5) Production build alma
+
+```bash
+npm run build
+```
+
+### 6) Lint kontrolu
+
+```bash
+npm run lint
+```
+
+## Notlar
+
+- Proje gelistirme surecinde canli veri servisleri kullanilmaktadir.
+- Ag veya servis kaynakli gecici kesintilerde bazi veriler gec gelebilir.
