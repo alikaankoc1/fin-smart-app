@@ -5,18 +5,18 @@ import useLanguage from '../hooks/useLanguage'
 
 const copyByLanguage = {
   tr: {
-    welcomeTitle: 'Akilli yatirim planlamaya hos geldiniz',
+    welcomeTitle: 'Akıllı yatırım planlamaya hoş geldiniz',
     welcomeBody:
-      'Fin Smart App, bakiyenizi risk seviyenize gore dagitmaniza yardimci olur. Giris yaptiktan sonra tutarinizi girin, risk tercihinizi secin ve size ozel dagilimi aninda gorun.',
-    login: 'Giris Yap',
-    continue: 'E-posta ve sifreniz ile devam edin.',
+      'Fin Smart App, bakiyenizi risk seviyenize göre dağıtmanıza yardımcı olur. Giriş yaptıktan sonra tutarınızı girin, risk tercihinizi seçin ve size özel dağılımı anında görün.',
+    login: 'Giriş Yap',
+    continue: 'E-posta ve şifreniz ile devam edin.',
     email: 'E-posta',
-    password: 'Sifre',
-    submit: 'Giris Yap',
+    password: 'Şifre',
+    submit: 'Giriş Yap',
     emailRequired: 'E-posta zorunludur.',
-    emailInvalid: 'Gecerli bir e-posta girin.',
-    passwordRequired: 'Sifre zorunludur.',
-    passwordLength: 'Sifre en az 6 karakter olmali.',
+    emailInvalid: 'Geçerli bir e-posta girin.',
+    passwordRequired: 'Şifre zorunludur.',
+    passwordLength: 'Şifre en az 6 karakter olmalıdır.',
     emailPlaceholder: 'ornek@mail.com',
   },
   en: {

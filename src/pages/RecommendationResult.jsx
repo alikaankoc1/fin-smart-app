@@ -20,70 +20,70 @@ const moneyFormatter = new Intl.NumberFormat('tr-TR', {
 })
 
 const allocationByRiskProfile = {
-  'Cok Muhafazakar': [
+  'Çok Muhafazakar': [
     { key: 'usd', instrumentId: 'usd', name: 'Dolar', ratio: 0.12, Icon: BadgeDollarSign },
     { key: 'eur', instrumentId: 'eur', name: 'Euro', ratio: 0.08, Icon: CircleDollarSign },
-    { key: 'gbp', instrumentId: 'gbp', name: 'Pound', ratio: 0.05, Icon: Landmark },
-    { key: 'gram', instrumentId: 'gram', name: 'Gram Altin', ratio: 0.6, Icon: Coins },
-    { key: 'silver', instrumentId: 'silver', name: 'Gram Gumus', ratio: 0.15, Icon: Gem },
+    { key: 'gbp', instrumentId: 'gbp', name: 'Sterlin', ratio: 0.05, Icon: Landmark },
+    { key: 'gram', instrumentId: 'gram', name: 'Gram Altın', ratio: 0.6, Icon: Coins },
+    { key: 'silver', instrumentId: 'silver', name: 'Gram Gümüş', ratio: 0.15, Icon: Gem },
   ],
   Muhafazakar: [
     { key: 'usd', instrumentId: 'usd', name: 'Dolar', ratio: 0.18, Icon: BadgeDollarSign },
     { key: 'eur', instrumentId: 'eur', name: 'Euro', ratio: 0.12, Icon: CircleDollarSign },
-    { key: 'gbp', instrumentId: 'gbp', name: 'Pound', ratio: 0.1, Icon: Landmark },
-    { key: 'gram', instrumentId: 'gram', name: 'Gram Altin', ratio: 0.45, Icon: Coins },
-    { key: 'silver', instrumentId: 'silver', name: 'Gram Gumus', ratio: 0.15, Icon: Gem },
+    { key: 'gbp', instrumentId: 'gbp', name: 'Sterlin', ratio: 0.1, Icon: Landmark },
+    { key: 'gram', instrumentId: 'gram', name: 'Gram Altın', ratio: 0.45, Icon: Coins },
+    { key: 'silver', instrumentId: 'silver', name: 'Gram Gümüş', ratio: 0.15, Icon: Gem },
   ],
   Dengeli: [
     { key: 'usd', instrumentId: 'usd', name: 'Dolar', ratio: 0.25, Icon: BadgeDollarSign },
     { key: 'eur', instrumentId: 'eur', name: 'Euro', ratio: 0.15, Icon: CircleDollarSign },
-    { key: 'gbp', instrumentId: 'gbp', name: 'Pound', ratio: 0.15, Icon: Landmark },
-    { key: 'gram', instrumentId: 'gram', name: 'Gram Altin', ratio: 0.3, Icon: Coins },
-    { key: 'silver', instrumentId: 'silver', name: 'Gram Gumus', ratio: 0.15, Icon: Gem },
+    { key: 'gbp', instrumentId: 'gbp', name: 'Sterlin', ratio: 0.15, Icon: Landmark },
+    { key: 'gram', instrumentId: 'gram', name: 'Gram Altın', ratio: 0.3, Icon: Coins },
+    { key: 'silver', instrumentId: 'silver', name: 'Gram Gümüş', ratio: 0.15, Icon: Gem },
   ],
-  'Buyume Odakli': [
+  'Büyüme Odaklı': [
     { key: 'usd', instrumentId: 'usd', name: 'Dolar', ratio: 0.28, Icon: BadgeDollarSign },
     { key: 'eur', instrumentId: 'eur', name: 'Euro', ratio: 0.18, Icon: CircleDollarSign },
-    { key: 'gbp', instrumentId: 'gbp', name: 'Pound', ratio: 0.17, Icon: Landmark },
-    { key: 'gram', instrumentId: 'gram', name: 'Gram Altin', ratio: 0.25, Icon: Coins },
-    { key: 'silver', instrumentId: 'silver', name: 'Gram Gumus', ratio: 0.12, Icon: Gem },
+    { key: 'gbp', instrumentId: 'gbp', name: 'Sterlin', ratio: 0.17, Icon: Landmark },
+    { key: 'gram', instrumentId: 'gram', name: 'Gram Altın', ratio: 0.25, Icon: Coins },
+    { key: 'silver', instrumentId: 'silver', name: 'Gram Gümüş', ratio: 0.12, Icon: Gem },
   ],
   Agresif: [
     { key: 'usd', instrumentId: 'usd', name: 'Dolar', ratio: 0.32, Icon: BadgeDollarSign },
     { key: 'eur', instrumentId: 'eur', name: 'Euro', ratio: 0.2, Icon: CircleDollarSign },
-    { key: 'gbp', instrumentId: 'gbp', name: 'Pound', ratio: 0.18, Icon: Landmark },
-    { key: 'gram', instrumentId: 'gram', name: 'Gram Altin', ratio: 0.2, Icon: Coins },
-    { key: 'silver', instrumentId: 'silver', name: 'Gram Gumus', ratio: 0.1, Icon: Gem },
+    { key: 'gbp', instrumentId: 'gbp', name: 'Sterlin', ratio: 0.18, Icon: Landmark },
+    { key: 'gram', instrumentId: 'gram', name: 'Gram Altın', ratio: 0.2, Icon: Coins },
+    { key: 'silver', instrumentId: 'silver', name: 'Gram Gümüş', ratio: 0.1, Icon: Gem },
   ],
 }
 
 const volatilityByProfile = {
-  'Cok Muhafazakar': 0.8,
+  'Çok Muhafazakar': 0.8,
   Muhafazakar: 0.9,
   Dengeli: 1,
-  'Buyume Odakli': 1.1,
+  'Büyüme Odaklı': 1.1,
   Agresif: 1.2,
 }
 
 const horizonByProfile = {
-  'Cok Muhafazakar': 1,
+  'Çok Muhafazakar': 1,
   Muhafazakar: 1.5,
   Dengeli: 2,
-  'Buyume Odakli': 2.5,
+  'Büyüme Odaklı': 2.5,
   Agresif: 3,
 }
 
 const modeOptions = [
   { id: 'mixed', label: 'Otomatik Sepet' },
-  { id: 'single', label: 'Tek Varlik' },
+  { id: 'single', label: 'Tek Varlık' },
 ]
 
 const singleAssetOptions = [
   { id: 'usd', label: 'Dolar' },
   { id: 'eur', label: 'Euro' },
-  { id: 'gbp', label: 'Pound' },
-  { id: 'gram', label: 'Gram Altin' },
-  { id: 'silver', label: 'Gram Gumus' },
+  { id: 'gbp', label: 'Sterlin' },
+  { id: 'gram', label: 'Gram Altın' },
+  { id: 'silver', label: 'Gram Gümüş' },
 ]
 
 const singleAssetCatalog = allocationByRiskProfile.Dengeli.reduce((acc, item) => {
@@ -107,7 +107,7 @@ function getAutoTrendComment(series, annualVolatility, isEnglish = false) {
   if (!series || series.length < 2) {
     return isEnglish
       ? 'Recent data is limited, confidence is low.'
-      : 'Son veriler sinirli, yorum guven seviyesi dusuk.'
+      : 'Son veriler sınırlı, yorum güven seviyesi düşük.'
   }
 
   const first = Number(series[0]?.close) || 0
@@ -115,7 +115,7 @@ function getAutoTrendComment(series, annualVolatility, isEnglish = false) {
   if (first <= 0 || last <= 0) {
     return isEnglish
       ? 'Trend comment is limited due to data quality.'
-      : 'Veri kalite sorunu nedeniyle trend yorumu sinirli.'
+      : 'Veri kalite sorunu nedeniyle trend yorumu sınırlı.'
   }
 
   const changePct = ((last - first) / first) * 100
@@ -125,11 +125,11 @@ function getAutoTrendComment(series, annualVolatility, isEnglish = false) {
       : changePct < -6
         ? 'pullback'
         : 'sideways movement'
-    : changePct > 6
-      ? 'yukselis'
+      : changePct > 6
+      ? 'yükseliş'
       : changePct < -6
         ? 'gerileme'
-        : 'yatay-seyir'
+        : 'yatay seyir'
   const volText = isEnglish
     ? annualVolatility > 0.28
       ? 'high volatility'
@@ -137,14 +137,14 @@ function getAutoTrendComment(series, annualVolatility, isEnglish = false) {
         ? 'moderate volatility'
         : 'low volatility'
     : annualVolatility > 0.28
-      ? 'yuksek oynaklik'
+      ? 'yüksek oynaklık'
       : annualVolatility > 0.16
-        ? 'orta oynaklik'
-        : 'dusuk oynaklik'
+        ? 'orta oynaklık'
+        : 'düşük oynaklık'
 
   return isEnglish
     ? `Recent data suggests ${trendText} with ${volText}.`
-    : `Son donemde ${trendText} ve ${volText} izleniyor.`
+    : `Son dönemde ${trendText} ve ${volText} izleniyor.`
 }
 
 function getVolatilityAlert(annualVolatility, isEnglish = false) {
@@ -155,10 +155,10 @@ function getVolatilityAlert(annualVolatility, isEnglish = false) {
   if (annualVolatility >= 0.28) {
     return {
       level: 'high',
-      label: isEnglish ? 'High volatility risk' : 'Yuksek volatilite riski',
+      label: isEnglish ? 'High volatility risk' : 'Yüksek volatilite riski',
       detail: isEnglish
         ? 'Sharp price swings are likely in this asset.'
-        : 'Bu varlikta sert fiyat hareketleri gorulebilir.',
+        : 'Bu varlıkta sert fiyat hareketleri görülebilir.',
       className: 'border-rose-400/40 bg-rose-400/10 text-rose-200',
     }
   }
@@ -169,17 +169,17 @@ function getVolatilityAlert(annualVolatility, isEnglish = false) {
       label: isEnglish ? 'Medium volatility' : 'Orta volatilite',
       detail: isEnglish
         ? 'Moderate fluctuations are expected; monitor regularly.'
-        : 'Orta duzey dalgalanma beklenir; duzenli takip edin.',
+        : 'Orta düzey dalgalanma beklenir; düzenli takip edin.',
       className: 'border-amber-400/40 bg-amber-400/10 text-amber-200',
     }
   }
 
   return {
     level: 'low',
-    label: isEnglish ? 'Low volatility' : 'Dusuk volatilite',
+    label: isEnglish ? 'Low volatility' : 'Düşük volatilite',
     detail: isEnglish
       ? 'Price movements are relatively stable for now.'
-      : 'Fiyat hareketleri su an gorece daha stabil.',
+      : 'Fiyat hareketleri şu an görece daha stabil.',
     className: 'border-emerald-400/40 bg-emerald-400/10 text-emerald-200',
   }
 }
@@ -240,7 +240,7 @@ export default function RecommendationResult({ onBack }) {
               ...scenario,
               comment: isEn
                 ? 'Live history unavailable, using fallback estimate.'
-                : 'Canli gecmis veriye erisimde kesinti oldugu icin tahmini yorum kullaniliyor.',
+                : 'Canlı geçmiş veriye erişimde kesinti olduğu için tahmini yorum kullanılıyor.',
             }
           }
         }),
@@ -290,12 +290,12 @@ export default function RecommendationResult({ onBack }) {
             className="inline-flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm font-medium text-slate-200 hover:bg-slate-800"
           >
             <ArrowLeft size={16} />
-            {isEn ? 'Back To Market' : 'Piyasa Ekranina Don'}
+            {isEn ? 'Back To Market' : 'Piyasa Ekranına Dön'}
           </button>
           <LanguageSwitcher />
           <div className="text-right">
             <h1 className="text-2xl font-bold text-white md:text-3xl">
-              {isEn ? 'Recommendation Result' : 'Oneri Sonucu'}
+              {isEn ? 'Recommendation Result' : 'Öneri Sonucu'}
             </h1>
             <p className="text-sm text-slate-400">
               {isEn ? 'Risk profile' : 'Risk profili'}:{' '}
@@ -311,7 +311,7 @@ export default function RecommendationResult({ onBack }) {
         <div className="mb-6 rounded-2xl border border-emerald-300/20 bg-emerald-400/5 p-4">
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
             <p className="text-sm text-slate-300">
-              {isEn ? 'Investment mode' : 'Yatirim modu secimi'}
+              {isEn ? 'Investment mode' : 'Yatırım modu seçimi'}
             </p>
             <div className="inline-flex rounded-xl border border-slate-700 bg-slate-900/60 p-1">
               {modeOptions.map((option) => (
@@ -339,16 +339,16 @@ export default function RecommendationResult({ onBack }) {
             {investmentMode === 'mixed'
               ? isEn
                 ? 'Auto Basket selected: allocation is based on your risk profile.'
-                : 'Otomatik Sepet secili: risk profiline gore dagilim gosteriliyor.'
+                : 'Otomatik Sepet seçili: risk profiline göre dağılım gösteriliyor.'
               : isEn
                 ? 'Single Asset selected: entire portfolio is assigned to selected asset.'
-                : 'Tek Varlik secili: portfoyun tamami secilen varliga atanir.'}
+                : 'Tek varlık seçili: portföyün tamamı seçilen varlığa atanır.'}
           </p>
 
           {investmentMode === 'single' && (
             <div className="mb-3 flex flex-wrap items-center gap-2">
               <label htmlFor="single-asset" className="text-xs text-slate-400">
-                {isEn ? 'Single asset selection' : 'Tek varlik secimi'}
+                {isEn ? 'Single asset selection' : 'Tek varlık seçimi'}
               </label>
               <select
                 id="single-asset"
@@ -368,11 +368,11 @@ export default function RecommendationResult({ onBack }) {
           <p className="text-sm text-slate-300">
             {isEn
               ? 'Total Portfolio Projection (Top Band)'
-              : 'Toplam Portfoy Projeksiyonu (Ust Bant)'}
+              : 'Toplam Portföy Projeksiyonu (Üst Bant)'}
           </p>
           <div className="mt-2 grid grid-cols-1 gap-2 text-sm md:grid-cols-3">
             <p className="rounded-lg border border-slate-700 bg-slate-900/70 px-3 py-2 text-slate-300">
-              {isEn ? 'Pessimistic' : 'Kotumser'}:{' '}
+              {isEn ? 'Pessimistic' : 'Kötümser'}:{' '}
               <span className="font-semibold text-rose-300">{moneyFormatter.format(portfolioBand.pessimistic)}</span>
             </p>
             <p className="rounded-lg border border-slate-700 bg-slate-900/70 px-3 py-2 text-slate-300">
@@ -380,7 +380,7 @@ export default function RecommendationResult({ onBack }) {
               <span className="font-semibold text-emerald-300">{moneyFormatter.format(portfolioBand.base)}</span>
             </p>
             <p className="rounded-lg border border-slate-700 bg-slate-900/70 px-3 py-2 text-slate-300">
-              {isEn ? 'Optimistic' : 'Iyimser'}:{' '}
+              {isEn ? 'Optimistic' : 'İyimser'}:{' '}
               <span className="font-semibold text-cyan-300">{moneyFormatter.format(portfolioBand.optimistic)}</span>
             </p>
           </div>
@@ -417,7 +417,7 @@ export default function RecommendationResult({ onBack }) {
                   {investmentMode === 'single'
                     ? isEn
                       ? '(Full portfolio)'
-                      : '(Tum portfoy)'
+                      : '(Tüm portföy)'
                     : ''}
                 </p>
 
@@ -431,7 +431,7 @@ export default function RecommendationResult({ onBack }) {
                         </div>
                       )}
                       <p className="text-slate-300">
-                        {isEn ? 'Pessimistic' : 'Kotumser'}:{' '}
+                        {isEn ? 'Pessimistic' : 'Kötümser'}:{' '}
                         <span className="font-semibold text-rose-300">{moneyFormatter.format(scenario.pessimistic)}</span>
                       </p>
                       <p className="text-slate-300">
@@ -439,7 +439,7 @@ export default function RecommendationResult({ onBack }) {
                         <span className="font-semibold text-emerald-300">{moneyFormatter.format(scenario.base)}</span>
                       </p>
                       <p className="text-slate-300">
-                        {isEn ? 'Optimistic' : 'Iyimser'}:{' '}
+                        {isEn ? 'Optimistic' : 'İyimser'}:{' '}
                         <span className="font-semibold text-cyan-300">{moneyFormatter.format(scenario.optimistic)}</span>
                       </p>
                       <p className="pt-1 text-sm text-slate-400">{scenario.comment}</p>
@@ -452,7 +452,7 @@ export default function RecommendationResult({ onBack }) {
                           : 'Senaryo hesaplanıyor...'
                         : isEn
                           ? 'Scenario could not be calculated.'
-                          : 'Senaryo hesaplanamadi.'}
+                          : 'Senaryo hesaplanamadı.'}
                     </p>
                   )}
                 </div>

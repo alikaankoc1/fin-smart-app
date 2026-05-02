@@ -13,8 +13,8 @@ const periodOptions = [
 ]
 
 const intervalOptions = [
-  { id: '1d', label: 'Gunluk' },
-  { id: '1wk', label: 'Haftalik' },
+  { id: '1d', label: 'Günlük' },
+  { id: '1wk', label: 'Haftalık' },
 ]
 
 const formatter = new Intl.NumberFormat('tr-TR', {
@@ -48,21 +48,21 @@ function getTrendText(first, last, isEn = false) {
   if (change > 6) {
     return isEn
       ? `Strong upward momentum in recent period (${change.toFixed(2)}%).`
-      : `Son donemde guclu bir yukselis egilimi var (${change.toFixed(2)}%).`
+      : `Son dönemde güçlü bir yükseliş eğilimi var (${change.toFixed(2)}%).`
   }
   if (change > 0) {
     return isEn
       ? `Positive but balanced movement in recent period (${change.toFixed(2)}%).`
-      : `Son donemde pozitif ama dengeli bir hareket var (${change.toFixed(2)}%).`
+      : `Son dönemde pozitif ama dengeli bir hareket var (${change.toFixed(2)}%).`
   }
   if (change > -6) {
     return isEn
       ? `Limited pullback observed in recent period (${change.toFixed(2)}%).`
-      : `Son donemde sinirli bir geri cekilme goruluyor (${change.toFixed(2)}%).`
+      : `Son dönemde sınırlı bir geri çekilme görülüyor (${change.toFixed(2)}%).`
   }
   return isEn
     ? `Notable downtrend in recent period (${change.toFixed(2)}%).`
-    : `Son donemde belirgin bir dusus trendi dikkat cekiyor (${change.toFixed(2)}%).`
+    : `Son dönemde belirgin bir düşüş trendi dikkat çekiyor (${change.toFixed(2)}%).`
 }
 
 function buildChartModel(series) {
@@ -182,7 +182,7 @@ export default function MarketTrendPage({ instrument, onBack }) {
             className="inline-flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm font-medium text-slate-200 hover:bg-slate-800"
           >
             <ArrowLeft size={16} />
-            {isEn ? 'Back To Market' : 'Piyasa Ekranina Don'}
+            {isEn ? 'Back To Market' : 'Piyasa Ekranına Dön'}
           </button>
           <LanguageSwitcher />
 
@@ -191,7 +191,7 @@ export default function MarketTrendPage({ instrument, onBack }) {
             <p className="text-sm text-slate-400">
               {isEn
                 ? 'Price movement analysis across selected ranges'
-                : 'Belirli araliklarda fiyat hareketi analizi'}
+                : 'Belirli aralıklarda fiyat hareketi analizi'}
             </p>
           </div>
         </div>
@@ -244,7 +244,7 @@ export default function MarketTrendPage({ instrument, onBack }) {
         <div className="rounded-2xl border border-slate-700 bg-slate-950 p-4">
           {isLoading && (
             <p className="text-sm text-slate-400">
-              {isEn ? 'Loading chart...' : 'Grafik yukleniyor...'}
+              {isEn ? 'Loading chart...' : 'Grafik yükleniyor...'}
             </p>
           )}
           {error && <p className="text-sm text-rose-300">{error}</p>}
@@ -252,7 +252,7 @@ export default function MarketTrendPage({ instrument, onBack }) {
           {!isLoading && !error && chartModel && (
             <div className="space-y-3">
               <div className="flex flex-wrap items-center gap-4 rounded-xl border border-slate-800 bg-slate-900/70 px-3 py-2 text-sm">
-                <span className="text-slate-400">{isEn ? 'Selected Point' : 'Secili Nokta'}</span>
+                <span className="text-slate-400">{isEn ? 'Selected Point' : 'Seçili Nokta'}</span>
                 <span className="font-semibold text-emerald-300">
                   {dateFormatter.format(new Date(activePoint.timestamp * 1000))}
                 </span>
@@ -342,7 +342,7 @@ export default function MarketTrendPage({ instrument, onBack }) {
           <p className="mt-3 text-xs text-amber-300/90">
             {isEn
               ? 'History source unavailable, showing temporary trend around current price.'
-              : 'Gecmis veri kaynagina erisim saglanamadigi icin grafik gecici olarak guncel fiyat etrafinda olusturulan trend ile gosteriliyor.'}
+              : 'Geçmiş veri kaynağına erişim sağlanamadığı için grafik geçici olarak güncel fiyat etrafında oluşturulan trend ile gösteriliyor.'}
           </p>
         )}
 

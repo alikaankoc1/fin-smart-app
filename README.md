@@ -1,35 +1,35 @@
 # Fin Smart App
 
-Bu proje, Dumlupinar Universitesi Bilgisayar Muhendisligi bitirme projesi kapsaminda gelistirilmistir.
+Bu proje, Dumlupınar Üniversitesi Bilgisayar Mühendisliği bitirme projesi kapsamında geliştirilmiştir.
 
 ## Proje Bilgisi
 
-- **Ogrenci:** Ali Kaan Koc
-- **Universite:** Dumlupinar Universitesi
-- **Bolum:** Bilgisayar Muhendisligi
-- **Proje Konusu:** Kullanici risk profiline gore yatirim dagilimi ve senaryo bazli finansal oneriler
+- **Öğrenci:** Ali Kaan Koç
+- **Üniversite:** Dumlupınar Üniversitesi
+- **Bölüm:** Bilgisayar Mühendisliği
+- **Proje Konusu:** Kullanıcı risk profiline göre yatırım dağılımı ve senaryo bazlı finansal öneriler
 
-## Proje Ozeti
+## Proje Özeti
 
-Fin Smart App; kullanicidan birikim tutari ve risk profili bilgilerini alarak:
+Fin Smart App; kullanıcıdan birikim tutarı ve risk profili bilgilerini alarak:
 
-- Risk profiline uygun portfoy dagilimi sunar,
-- Canli piyasa verilerine dayali senaryo projeksiyonu hesaplar,
-- Varlik kartlarinda volatiliteye gore risk uyarisi gosterir,
-- Sonuc ekraninda varlik bazli kotumser / baz / iyimser tahminler uretir.
+- Risk profiline uygun portföy dağılımı sunar,
+- Canlı piyasa verilerine dayalı senaryo projeksiyonu hesaplar,
+- Varlık kartlarında volatiliteye göre risk uyarısı gösterir,
+- Sonuç ekranında varlık bazlı kötümser / baz / iyimser tahminler üretir.
 
-## Kullanilan Teknolojiler
+## Kullanılan Teknolojiler
 
 - React
 - Vite
 - Tailwind CSS
 - Lucide React
 
-## Projeyi Calistirma Adimlari
+## Projeyi Çalıştırma Adımları
 
 ### 1) Gereksinimler
 
-- Node.js (onerilen: LTS surumu)
+- Node.js (önerilen: LTS sürümü)
 - npm
 
 ### 2) Projeyi indirme
@@ -39,21 +39,21 @@ git clone <repo-url>
 cd fin-smart-app
 ```
 
-> Proje zaten bilgisayarinizda varsa bu adimi atlayabilirsiniz.
+> Proje zaten bilgisayarınızda varsa bu adımı atlayabilirsiniz.
 
-### 3) Bagimliliklari yukleme
+### 3) Bağımlılıkları yükleme
 
 ```bash
 npm install
 ```
 
-### 4) Gelistirme ortamini baslatma
+### 4) Geliştirme ortamını başlatma
 
 ```bash
 npm run dev
 ```
 
-Ardindan terminalde verilen adrese gidin (genellikle `http://localhost:5173`).
+Ardından terminalde verilen adrese gidin (genellikle `http://localhost:5173`).
 
 ### 5) Production build alma
 
@@ -61,7 +61,7 @@ Ardindan terminalde verilen adrese gidin (genellikle `http://localhost:5173`).
 npm run build
 ```
 
-### 6) Lint kontrolu
+### 6) Lint kontrolü
 
 ```bash
 npm run lint
@@ -69,5 +69,5 @@ npm run lint
 
 ## Notlar
 
-- Proje gelistirme surecinde canli veri servisleri kullanilmaktadir.
-- Ag veya servis kaynakli gecici kesintilerde bazi veriler gec gelebilir.
+- Proje geliştirme sürecinde canlı veri servisleri kullanılmaktadır.
+- Ağ veya servis kaynaklı geçici kesintilerde bazı veriler geç gelebilir.

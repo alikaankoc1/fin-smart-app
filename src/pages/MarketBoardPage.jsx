@@ -24,7 +24,9 @@ export default function MarketBoardPage({ onSelectInstrument, onGoTestPage }) {
       setRows(data)
       setLastUpdated(new Date())
     } catch (err) {
-      setError(err.message || (isEn ? 'Failed to load market data.' : 'Veri alinirken bir hata olustu.'))
+      setError(
+        err.message || (isEn ? 'Failed to load market data.' : 'Veri alınırken bir hata oluştu.'),
+      )
     }
   }, [isEn])
 
@@ -69,12 +71,12 @@ export default function MarketBoardPage({ onSelectInstrument, onGoTestPage }) {
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
           <div>
             <h1 className="text-2xl font-bold text-white md:text-3xl">
-              {isEn ? 'Live Buy / Sell Board' : 'Canli Alis / Satis Ekrani'}
+              {isEn ? 'Live Buy / Sell Board' : 'Canlı Alış / Satış Ekranı'}
             </h1>
             <p className="text-sm text-slate-400">
               {isEn
                 ? 'Minute-level market view from free data sources'
-                : 'Ucretsiz kaynaklardan dakikalik guncellenen piyasa gorunumu'}
+                : 'Ücretsiz kaynaklardan dakikalık güncellenen piyasa görünümü'}
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -91,7 +93,7 @@ export default function MarketBoardPage({ onSelectInstrument, onGoTestPage }) {
         </div>
 
         <div className="mb-4 text-sm text-slate-400">
-          {isEn ? 'Last update' : 'Son guncelleme'}:{' '}
+          {isEn ? 'Last update' : 'Son güncelleme'}:{' '}
           <span className="font-semibold text-emerald-300">{lastUpdatedText}</span>
         </div>
 
@@ -106,13 +108,13 @@ export default function MarketBoardPage({ onSelectInstrument, onGoTestPage }) {
             <thead>
               <tr className="bg-slate-800">
                 <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-300">
-                  {isEn ? 'Asset' : 'Varlik'}
+                  {isEn ? 'Asset' : 'Varlık'}
                 </th>
                 <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-emerald-300">
-                  {isEn ? 'Buy (TRY)' : 'Alis (TL)'}
+                  {isEn ? 'Buy (TRY)' : 'Alış (TL)'}
                 </th>
                 <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-rose-300">
-                  {isEn ? 'Sell (TRY)' : 'Satis (TL)'}
+                  {isEn ? 'Sell (TRY)' : 'Satış (TL)'}
                 </th>
               </tr>
             </thead>
@@ -139,14 +141,14 @@ export default function MarketBoardPage({ onSelectInstrument, onGoTestPage }) {
               {!isLoading && rows.length === 0 && (
                 <tr>
                   <td colSpan={3} className="px-4 py-8 text-center text-sm text-slate-400">
-                    {isEn ? 'No data to display.' : 'Gosterilecek veri bulunamadi.'}
+                    {isEn ? 'No data to display.' : 'Gösterilecek veri bulunamadı.'}
                   </td>
                 </tr>
               )}
               {isLoading && (
                 <tr>
                   <td colSpan={3} className="px-4 py-8 text-center text-sm text-slate-400">
-                    {isEn ? 'Loading market data...' : 'Piyasa verileri yukleniyor...'}
+                    {isEn ? 'Loading market data...' : 'Piyasa verileri yükleniyor...'}
                   </td>
                 </tr>
               )}
@@ -158,7 +160,7 @@ export default function MarketBoardPage({ onSelectInstrument, onGoTestPage }) {
           <p className="text-sm text-slate-400">
             {isEn
               ? 'For better recommendations, we suggest completing the short profile test.'
-              : 'Size daha isabetli oneriler sunabilmemiz icin kisa profil anketimize katilmanizi oneririz.'}
+              : 'Size daha isabetli öneriler sunabilmemiz için kısa profil anketimize katılmanızı öneririz.'}
           </p>
           <button
             type="button"

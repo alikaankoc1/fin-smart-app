@@ -40,7 +40,7 @@ async function fetchYahooSeries(symbol, range, interval) {
 
   const response = await fetch(url)
   if (!response.ok) {
-    throw new Error('Gecmis veri alinamadi.')
+    throw new Error('Geçmiş veri alınamadı.')
   }
 
   const data = await response.json()
@@ -105,7 +105,7 @@ export async function fetchInstrumentHistory(instrumentId, range, interval) {
 
   const config = instrumentMap[instrumentId]
   if (!config) {
-    throw new Error('Desteklenmeyen enstruman secimi.')
+    throw new Error('Desteklenmeyen enstrüman seçimi.')
   }
 
   if (config.type === 'pair') {

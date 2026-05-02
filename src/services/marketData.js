@@ -32,7 +32,7 @@ export async function fetchMarketBoardData() {
   ])
 
   if (!fxResponse.ok || !metalsResponse.ok) {
-    throw new Error('Canli piyasa verisi alinamadi.')
+    throw new Error('Canlı piyasa verisi alınamadı.')
   }
 
   const fxData = await fxResponse.json()
@@ -55,15 +55,15 @@ export async function fetchMarketBoardData() {
     { id: 'usd', name: 'Dolar', ...makeBidAsk(usdTry, 0.0025) },
     { id: 'eur', name: 'Euro', ...makeBidAsk(eurTry, 0.0025) },
     { id: 'gbp', name: 'Pound', ...makeBidAsk(gbpTry, 0.003) },
-    { id: 'gram', name: 'Gram Altin', ...makeBidAsk(gramGoldTry, 0.004) },
-    { id: 'quarter', name: 'Ceyrek Altin', ...makeBidAsk(quarterGoldTry, 0.006) },
-    { id: 'half', name: 'Yarim Altin', ...makeBidAsk(halfGoldTry, 0.0065) },
-    { id: 'full', name: 'Tam Altin', ...makeBidAsk(fullGoldTry, 0.007) },
+    { id: 'gram', name: 'Gram Altın', ...makeBidAsk(gramGoldTry, 0.004) },
+    { id: 'quarter', name: 'Çeyrek Altın', ...makeBidAsk(quarterGoldTry, 0.006) },
+    { id: 'half', name: 'Yarım Altın', ...makeBidAsk(halfGoldTry, 0.0065) },
+    { id: 'full', name: 'Tam Altın', ...makeBidAsk(fullGoldTry, 0.007) },
     {
       id: 'republic',
-      name: 'Cumhuriyet Altini',
+      name: 'Cumhuriyet Altını',
       ...makeBidAsk(republicGoldTry, 0.0075),
     },
-    { id: 'silver', name: 'Gram Gumus', ...makeBidAsk(gramSilverTry, 0.0055) },
+    { id: 'silver', name: 'Gram Gümüş', ...makeBidAsk(gramSilverTry, 0.0055) },
   ]
 }

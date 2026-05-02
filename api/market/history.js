@@ -135,6 +135,6 @@ export default async function handler(req, res) {
 
     res.status(200).json(series)
   } catch {
-    res.status(502).json({ error: 'Gecmis veri alinamadi' })
+    res.status(502).json({ error: 'Geçmiş veri alınamadı' })
   }
 }

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { LanguageContext } from './language-context'
 
 const LANGUAGE_KEY = 'fin-smart-language'
@@ -14,6 +14,10 @@ export function LanguageProvider({ children }) {
     setLanguageState(safe)
     localStorage.setItem(LANGUAGE_KEY, safe)
   }
+
+  useEffect(() => {
+    document.documentElement.lang = language
+  }, [language])
 
   const value = useMemo(
     () => ({

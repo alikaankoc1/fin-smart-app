@@ -59,20 +59,20 @@ export default async function handler(req, res) {
       { id: 'usd', name: 'Dolar', ...makeBidAsk(usdTry, 0.0025) },
       { id: 'eur', name: 'Euro', ...makeBidAsk(eurTry, 0.0025) },
       { id: 'gbp', name: 'Pound', ...makeBidAsk(gbpTry, 0.003) },
-      { id: 'gram', name: 'Gram Altin', ...makeBidAsk(gramGoldTry, 0.004) },
-      { id: 'quarter', name: 'Ceyrek Altin', ...makeBidAsk(quarterGoldTry, 0.006) },
-      { id: 'half', name: 'Yarim Altin', ...makeBidAsk(halfGoldTry, 0.0065) },
-      { id: 'full', name: 'Tam Altin', ...makeBidAsk(fullGoldTry, 0.007) },
+      { id: 'gram', name: 'Gram Altın', ...makeBidAsk(gramGoldTry, 0.004) },
+      { id: 'quarter', name: 'Çeyrek Altın', ...makeBidAsk(quarterGoldTry, 0.006) },
+      { id: 'half', name: 'Yarım Altın', ...makeBidAsk(halfGoldTry, 0.0065) },
+      { id: 'full', name: 'Tam Altın', ...makeBidAsk(fullGoldTry, 0.007) },
       {
         id: 'republic',
-        name: 'Cumhuriyet Altini',
+        name: 'Cumhuriyet Altını',
         ...makeBidAsk(republicGoldTry, 0.0075),
       },
-      { id: 'silver', name: 'Gram Gumus', ...makeBidAsk(gramSilverTry, 0.0055) },
+      { id: 'silver', name: 'Gram Gümüş', ...makeBidAsk(gramSilverTry, 0.0055) },
     ]
 
     res.status(200).json(rows)
   } catch {
-    res.status(502).json({ error: 'Canli piyasa verisi alinamadi' })
+    res.status(502).json({ error: 'Canlı piyasa verisi alınamadı' })
   }
 }

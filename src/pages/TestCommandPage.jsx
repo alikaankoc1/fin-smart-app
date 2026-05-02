@@ -8,83 +8,83 @@ const questionsByLanguage = {
   tr: [
   {
     id: 'investmentHorizon',
-    text: 'Yatirim sureniz ne kadar?',
+    text: 'Yatırım süreniz ne kadar?',
     options: [
-      { label: '0-1 yil', score: 1 },
-      { label: '1-3 yil', score: 3 },
-      { label: '3+ yil', score: 5 },
+      { label: '0-1 yıl', score: 1 },
+      { label: '1-3 yıl', score: 3 },
+      { label: '3+ yıl', score: 5 },
     ],
   },
   {
     id: 'drawdownTolerance',
-    text: 'Ana paranizin %10 deger kaybetmesi sizi ne kadar endiselendirir?',
+    text: 'Ana paranızın %10 değer kaybetmesi sizi ne kadar endişelendirir?',
     options: [
-      { label: 'Cok endiselendirir', score: 1 },
-      { label: 'Biraz endiselendirir', score: 3 },
-      { label: 'Endiselendirmez', score: 5 },
+      { label: 'Çok endişelendirir', score: 1 },
+      { label: 'Biraz endişelendirir', score: 3 },
+      { label: 'Hiç endişe duymam', score: 5 },
     ],
   },
   {
     id: 'incomeStability',
-    text: 'Gelirinizin duzenliligi nasil?',
+    text: 'Gelirinizin düzenliliği nasıl?',
     options: [
-      { label: 'Degisken / belirsiz', score: 1 },
-      { label: 'Kismi duzenli', score: 3 },
-      { label: 'Cok duzenli', score: 5 },
+      { label: 'Değişken / belirsiz', score: 1 },
+      { label: 'Kısmen düzenli', score: 3 },
+      { label: 'Çok düzenli', score: 5 },
     ],
   },
   {
     id: 'liquidityNeed',
-    text: 'Yakinda bu birikime ihtiyac duyma olasiliginiz nedir?',
+    text: 'Yakında bu birikime ihtiyaç duyma olasılığınız nedir?',
     options: [
-      { label: 'Yuksek', score: 1 },
+      { label: 'Yüksek', score: 1 },
       { label: 'Orta', score: 3 },
-      { label: 'Dusuk', score: 5 },
+      { label: 'Düşük', score: 5 },
     ],
   },
   {
     id: 'volatilityReaction',
-    text: 'Portfoy bir ayda %15 dusse ne yaparsiniz?',
+    text: 'Portföyünüz bir ayda %15 düşerse ne yaparsınız?',
     options: [
-      { label: 'Hemen satarim', score: 1 },
-      { label: 'Bir kismini satarim', score: 3 },
-      { label: 'Beklerim / ekleme yaparim', score: 5 },
+      { label: 'Hemen satarım', score: 1 },
+      { label: 'Bir kısmını satarım', score: 3 },
+      { label: 'Beklerim / ek alım yaparım', score: 5 },
     ],
   },
   {
     id: 'experience',
-    text: 'Yatirim tecrubenizi nasil tanimlarsiniz?',
+    text: 'Yatırım tecrübenizi nasıl tanımlarsınız?',
     options: [
-      { label: 'Yeni basliyorum', score: 1 },
+      { label: 'Yeni başlıyorum', score: 1 },
       { label: 'Orta seviye', score: 3 },
       { label: 'Deneyimliyim', score: 5 },
     ],
   },
   {
     id: 'tracking',
-    text: 'Portfoyunuzu ne siklikla takip edebilirsiniz?',
+    text: 'Portföyünüzü ne sıklıkla takip edebilirsiniz?',
     options: [
       { label: 'Nadiren', score: 1 },
-      { label: 'Haftalik', score: 3 },
-      { label: 'Gunluk', score: 5 },
+      { label: 'Haftalık', score: 3 },
+      { label: 'Günlük', score: 5 },
     ],
   },
   {
     id: 'returnPriority',
-    text: 'Sizin icin hangisi daha oncelikli?',
+    text: 'Sizin için hangisi daha öncelikli?',
     options: [
-      { label: 'Anapara guvenligi', score: 1 },
+      { label: 'Anapara güvenliği', score: 1 },
       { label: 'Denge', score: 3 },
-      { label: 'Yuksek getiri potansiyeli', score: 5 },
+      { label: 'Yüksek getiri potansiyeli', score: 5 },
     ],
   },
   {
     id: 'goal',
-    text: 'Amaciniz nedir?',
+    text: 'Amacınız nedir?',
     options: [
       { label: 'Birikimimi korumak', score: 1 },
-      { label: 'Duzenli gelir elde etmek', score: 3 },
-      { label: 'Maksimum kazanc', score: 5 },
+      { label: 'Düzenli gelir elde etmek', score: 3 },
+      { label: 'Maksimum kazanç', score: 5 },
     ],
   },
   ],
@@ -212,7 +212,7 @@ function parseAmountInput(rawValue) {
 
 function calculateRiskProfile(totalScore) {
   if (totalScore <= 14) {
-    return 'Cok Muhafazakar'
+    return 'Çok Muhafazakar'
   }
   if (totalScore <= 22) {
     return 'Muhafazakar'
@@ -221,7 +221,7 @@ function calculateRiskProfile(totalScore) {
     return 'Dengeli'
   }
   if (totalScore <= 38) {
-    return 'Buyume Odakli'
+    return 'Büyüme Odaklı'
   }
   if (totalScore <= 45) {
     return 'Agresif'
@@ -251,7 +251,7 @@ export default function TestCommandPage({ onBack, onComplete }) {
       currentStep < 0
         ? isEn
           ? 'Setup'
-          : 'Hazirlik'
+          : 'Hazırlık'
         : `${currentStep + 1} / ${questions.length}`,
     [currentStep, isEn, questions.length],
   )
@@ -307,20 +307,20 @@ export default function TestCommandPage({ onBack, onComplete }) {
             className="inline-flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm font-medium text-slate-200 hover:bg-slate-800"
           >
             <ArrowLeft size={16} />
-            {isEn ? 'Back To Market' : 'Piyasa Ekranina Don'}
+            {isEn ? 'Back To Market' : 'Piyasa Ekranına Dön'}
           </button>
           <LanguageSwitcher />
         </div>
 
         <h1 className="text-2xl font-bold text-white md:text-3xl">
-          {isEn ? 'Investment Profile Test' : 'Yatirim Profili Testi'}
+          {isEn ? 'Investment Profile Test' : 'Yatırım Profili Testi'}
         </h1>
         <p className="mt-2 text-sm text-slate-400">
           {isEn ? 'Question' : 'Soru'} {progressText}
         </p>
         <div className="mt-4">
           <div className="mb-2 flex items-center justify-between text-xs text-slate-400">
-            <span>{isEn ? 'Progress' : 'Ilerleme'}</span>
+            <span>{isEn ? 'Progress' : 'İlerleme'}</span>
             <span>%{Math.round(progressPercent)}</span>
           </div>
           <div className="h-2 w-full overflow-hidden rounded-full bg-slate-800">
@@ -337,12 +337,12 @@ export default function TestCommandPage({ onBack, onComplete }) {
               <h2 className="text-lg font-semibold text-white md:text-xl">
                 {isEn
                   ? 'What is the amount you want to invest?'
-                  : 'Birikim yapilacak tutar nedir?'}
+                  : 'Birikim yapılacak tutar nedir?'}
               </h2>
               <p className="mt-2 text-sm text-slate-400">
                 {isEn
                   ? 'Enter your target amount before starting the test.'
-                  : 'Teste baslamadan once hedef tutari giriniz.'}
+                  : 'Teste başlamadan önce hedef tutarı giriniz.'}
               </p>
               <div className="mt-4">
                 <input
@@ -350,7 +350,7 @@ export default function TestCommandPage({ onBack, onComplete }) {
                   inputMode="decimal"
                   value={savingsAmount}
                   onChange={(event) => setSavingsAmount(event.target.value)}
-                  placeholder={isEn ? 'Ex: 100000' : 'Orn: 100000'}
+                  placeholder={isEn ? 'Ex: 100000' : 'Örn: 100000'}
                   className="w-full rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-emerald-400"
                 />
               </div>
