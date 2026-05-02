@@ -70,25 +70,25 @@ export default function LoginPage({ onLogin }) {
           <p className="text-slate-300">{copy.welcomeBody}</p>
         </section>
 
-        <section className="rounded-2xl border border-slate-700 bg-slate-900 p-6 shadow-xl shadow-black/30">
-          <h2 className="mb-1 text-xl font-semibold text-white">{copy.login}</h2>
-          <p className="mb-5 text-sm text-slate-400">{copy.continue}</p>
+        <section className="rounded-2xl border border-slate-700 bg-slate-900 p-7 shadow-xl shadow-black/30 md:p-8">
+          <h2 className="mb-1.5 text-2xl font-semibold text-white">{copy.login}</h2>
+          <p className="mb-6 text-base leading-relaxed text-slate-300">{copy.continue}</p>
 
-          <form onSubmit={handleSubmit(submitForm)} className="space-y-4">
+          <form onSubmit={handleSubmit(submitForm)} className="space-y-5">
             <div>
               <label
                 htmlFor="email"
-                className="mb-1 block text-sm font-medium text-slate-200"
+                className="mb-1.5 block text-[15px] font-medium text-slate-100"
               >
                 {copy.email}
               </label>
               <div className="relative">
-                <Mail className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-500" />
+                <Mail className="pointer-events-none absolute left-3 top-1/2 size-[18px] -translate-y-1/2 text-slate-400" />
                 <input
                   id="email"
                   type="email"
                   placeholder={copy.emailPlaceholder}
-                  className="w-full rounded-xl border border-slate-700 bg-slate-950 py-2.5 pl-9 pr-3 text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-300/30"
+                  className="w-full rounded-xl border border-slate-700 bg-slate-950 py-3 pl-10 pr-3 text-base text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-300/30"
                   {...register('email', {
                     required: copy.emailRequired,
                     pattern: {
@@ -106,17 +106,17 @@ export default function LoginPage({ onLogin }) {
             <div>
               <label
                 htmlFor="password"
-                className="mb-1 block text-sm font-medium text-slate-200"
+                className="mb-1.5 block text-[15px] font-medium text-slate-100"
               >
                 {copy.password}
               </label>
               <div className="relative">
-                <LockKeyhole className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-500" />
+                <LockKeyhole className="pointer-events-none absolute left-3 top-1/2 size-[18px] -translate-y-1/2 text-slate-400" />
                 <input
                   id="password"
                   type="password"
                   placeholder="••••••••"
-                  className="w-full rounded-xl border border-slate-700 bg-slate-950 py-2.5 pl-9 pr-3 text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-300/30"
+                  className="w-full rounded-xl border border-slate-700 bg-slate-950 py-3 pl-10 pr-3 text-base text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-300/30"
                   {...register('password', {
                     required: copy.passwordRequired,
                     minLength: {
@@ -135,7 +135,7 @@ export default function LoginPage({ onLogin }) {
 
             <button
               type="submit"
-              className="w-full rounded-xl bg-emerald-500 px-4 py-2.5 font-semibold text-slate-950 transition hover:bg-emerald-400"
+              className="w-full rounded-xl bg-emerald-500 px-4 py-3 text-base font-semibold text-slate-950 transition hover:bg-emerald-400"
             >
               {copy.submit}
             </button>
