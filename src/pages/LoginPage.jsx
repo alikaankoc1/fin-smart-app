@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { LockKeyhole, Mail, UserRound } from 'lucide-react'
+import { Info, LockKeyhole, Mail, UserRound } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import LanguageSwitcher from '../components/LanguageSwitcher'
 import useLanguage from '../hooks/useLanguage'
@@ -34,6 +34,9 @@ const copyByLanguage = {
     goLogin: 'Giriş Yap',
     mobileTabLogin: 'Giriş',
     mobileTabRegister: 'Üye Ol',
+    disclaimerBadge: 'Akademik demo',
+    disclaimerText:
+      'Bu uygulama Dumlupınar Üniversitesi Bilgisayar Mühendisliği bitirme projesi kapsamında geliştirilmiştir. Gösterilen veriler ve öneriler yalnızca öğrenme ve sunum amaçlıdır; gerçek yatırım tavsiyesi değildir ve ticari karar için kullanılmamalıdır.',
   },
   en: {
     welcomeTitle: 'Welcome to smart investment planning',
@@ -64,6 +67,9 @@ const copyByLanguage = {
     goLogin: 'Sign In',
     mobileTabLogin: 'Sign In',
     mobileTabRegister: 'Sign Up',
+    disclaimerBadge: 'Academic demo',
+    disclaimerText:
+      'Built as a graduation project for the Computer Engineering program at Dumlupınar University. All content is for demonstration and educational purposes only; it is not investment advice and must not be used for trading or commercial decisions.',
   },
 }
 
@@ -100,6 +106,26 @@ export default function LoginPage({ onLogin }) {
           </span>
           <LanguageSwitcher />
         </div>
+
+        <aside
+          role="note"
+          aria-label={copy.disclaimerBadge}
+          className="rounded-2xl border border-amber-400/35 bg-gradient-to-r from-amber-500/15 to-amber-600/10 px-4 py-3.5 shadow-lg shadow-amber-950/20 md:px-5 md:py-4"
+        >
+          <div className="flex gap-3 md:gap-4">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-400/15 text-amber-200 ring-1 ring-amber-400/25">
+              <Info className="size-5" aria-hidden />
+            </div>
+            <div className="min-w-0 flex-1 space-y-1">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-amber-200/95 md:text-xs">
+                {copy.disclaimerBadge}
+              </p>
+              <p className="text-sm leading-relaxed text-amber-50/95 md:text-[15px]">
+                {copy.disclaimerText}
+              </p>
+            </div>
+          </div>
+        </aside>
 
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,640px)] lg:items-start">
           <section className="flex flex-col justify-center space-y-4 lg:pr-4">
