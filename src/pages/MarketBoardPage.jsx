@@ -18,12 +18,14 @@ export default function MarketBoardPage({ onSelectInstrument, onGoTestPage }) {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
   const [lastUpdated, setLastUpdated] = useState(null)
+  const [fxSourceUpdatedAt, setFxSourceUpdatedAt] = useState(null)
 
   const loadData = useCallback(async () => {
     try {
-      const data = await fetchMarketBoardData()
+      const { rows: nextRows, sourceUpdatedAt } = await fetchMarketBoardData()
       setError('')
-      setRows(data)
+      setRows(nextRows)
+      setFxSourceUpdatedAt(sourceUpdatedAt ? new Date(sourceUpdatedAt) : null)
       setLastUpdated(new Date())
     } catch (err) {
       setError(resolveFetchErrorMessage(err.message, messages))
@@ -65,6 +67,21 @@ export default function MarketBoardPage({ onSelectInstrument, onGoTestPage }) {
     return lastUpdated.toLocaleTimeString(isEn ? 'en-US' : 'tr-TR')
   }, [isEn, lastUpdated])
 
+  const fxSourceLine = useMemo(() => {
+    if (!fxSourceUpdatedAt || Number.isNaN(fxSourceUpdatedAt.getTime())) {
+      return null
+    }
+    const locale = isEn ? 'en-US' : 'tr-TR'
+    const dateStr = fxSourceUpdatedAt.toLocaleString(locale, {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    })
+    return isEn ? `FX reference table published: ${dateStr}` : `Döviz referans tablosu: ${dateStr}`
+  }, [fxSourceUpdatedAt, isEn])
+
   return (
     <main className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950 px-4 py-8">
       <section className="w-full max-w-5xl rounded-3xl border border-emerald-200/20 bg-slate-900/70 p-6 shadow-2xl shadow-black/40 backdrop-blur md:p-10">
@@ -75,8 +92,8 @@ export default function MarketBoardPage({ onSelectInstrument, onGoTestPage }) {
             </h1>
             <p className="text-sm text-slate-400">
               {isEn
-                ? 'Minute-level market view from free data sources'
-                : 'Ücretsiz kaynaklardan dakikalık güncellenen piyasa görünümü'}
+                ? 'Reference rates from free APIs (FX updates ~daily; not live bank quotes).'
+                : 'Ücretsiz API referans kurları (döviz tablosu yaklaşık günlük yenilenir; banka alış/satışı değildir).'}
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -92,9 +109,16 @@ export default function MarketBoardPage({ onSelectInstrument, onGoTestPage }) {
           </div>
         </div>
 
-        <div className="mb-4 text-sm text-slate-400">
-          {isEn ? 'Last update' : 'Son güncelleme'}:{' '}
-          <span className="font-semibold text-emerald-300">{lastUpdatedText}</span>
+        <div className="mb-4 space-y-1 text-sm text-slate-400">
+          <div>
+            {isEn ? 'Page refreshed' : 'Sayfa yenileme'}:{' '}
+            <span className="font-semibold text-emerald-300">{lastUpdatedText}</span>
+          </div>
+          {fxSourceLine && (
+            <div className="text-slate-500">
+              {fxSourceLine}
+            </div>
+          )}
         </div>
 
         {error && (

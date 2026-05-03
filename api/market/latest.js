@@ -29,10 +29,13 @@ export default async function handler(req, res) {
     return
   }
 
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate')
+  res.setHeader('Pragma', 'no-cache')
+
   try {
     const [fxResponse, metalsResponse] = await Promise.all([
-      fetch(FX_API_URL),
-      fetch(METALS_API_URL),
+      fetch(FX_API_URL, { cache: 'no-store' }),
+      fetch(METALS_API_URL, { cache: 'no-store' }),
     ])
 
     if (!fxResponse.ok || !metalsResponse.ok) {
@@ -71,7 +74,10 @@ export default async function handler(req, res) {
       { id: 'silver', name: 'Gram Gümüş', ...makeBidAsk(gramSilverTry, 0.0055) },
     ]
 
-    res.status(200).json(rows)
+    /** ExchangeRate-API: when the FX table was last published (often ~daily on free tier). */
+    const sourceUpdatedAt = fxData?.time_last_update_utc ?? null
+
+    res.status(200).json({ rows, sourceUpdatedAt })
   } catch {
     res.status(502).json({ error: 'Canlı piyasa verisi alınamadı' })
   }

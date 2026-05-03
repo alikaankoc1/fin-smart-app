@@ -15,20 +15,33 @@ function makeBidAsk(midPrice, spreadRatio) {
   }
 }
 
+/**
+ * @returns {Promise<{ rows: Array<{ id: string, name: string, buy: number, sell: number }>, sourceUpdatedAt: string | null }>}
+ */
 export async function fetchMarketBoardData() {
   try {
-    const response = await fetch(MARKET_LATEST_API_URL)
+    const response = await fetch(MARKET_LATEST_API_URL, { cache: 'no-store' })
     if (!response.ok) {
       throw new Error('proxy failed')
     }
-    return response.json()
+    const payload = await response.json()
+    if (Array.isArray(payload)) {
+      return { rows: payload, sourceUpdatedAt: null }
+    }
+    if (payload?.rows) {
+      return {
+        rows: payload.rows,
+        sourceUpdatedAt: payload.sourceUpdatedAt ?? null,
+      }
+    }
+    throw new Error('invalid payload')
   } catch {
     // Local fallback when serverless endpoint is unavailable.
   }
 
   const [fxResponse, metalsResponse] = await Promise.all([
-    fetch(FX_API_URL),
-    fetch(METALS_API_URL),
+    fetch(FX_API_URL, { cache: 'no-store' }),
+    fetch(METALS_API_URL, { cache: 'no-store' }),
   ])
 
   if (!fxResponse.ok || !metalsResponse.ok) {
@@ -51,7 +64,7 @@ export async function fetchMarketBoardData() {
   const fullGoldTry = gramGoldTry * GRAM_GOLD_IN_FULL
   const republicGoldTry = gramGoldTry * GRAM_GOLD_IN_REPUBLIC
 
-  return [
+  const rows = [
     { id: 'usd', name: 'Dolar', ...makeBidAsk(usdTry, 0.0025) },
     { id: 'eur', name: 'Euro', ...makeBidAsk(eurTry, 0.0025) },
     { id: 'gbp', name: 'Pound', ...makeBidAsk(gbpTry, 0.003) },
@@ -66,4 +79,9 @@ export async function fetchMarketBoardData() {
     },
     { id: 'silver', name: 'Gram Gümüş', ...makeBidAsk(gramSilverTry, 0.0055) },
   ]
+
+  return {
+    rows,
+    sourceUpdatedAt: fxData?.time_last_update_utc ?? null,
+  }
 }

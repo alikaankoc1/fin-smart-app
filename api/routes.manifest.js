@@ -43,7 +43,7 @@ export const API_ROUTES = [
     path: '/api/market/latest',
     methods: ['GET', 'OPTIONS'],
     auth: false,
-    notes: 'Proxies FX + metals; 502 if upstream fails',
+    notes: 'JSON { rows, sourceUpdatedAt }; FX + metals; no-store; 502 if upstream fails',
   },
   {
     path: '/api/market/history',
