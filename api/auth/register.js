@@ -1,5 +1,5 @@
 import { hashPassword } from '../lib/password.js'
-import { createSession, createUser, normalizeEmail } from './store.js'
+import { createSession, createUser, findUser, normalizeEmail } from './store.js'
 
 function setCors(res) {
   res.setHeader('Access-Control-Allow-Origin', '*')
@@ -47,9 +47,14 @@ export default async function handler(req, res) {
   }
 
   const token = createSession(email)
+  const created = findUser(email)
 
   res.status(201).json({
     token,
-    user: { email, fullName },
+    user: {
+      email,
+      fullName,
+      createdAt: created?.createdAt ?? null,
+    },
   })
 }

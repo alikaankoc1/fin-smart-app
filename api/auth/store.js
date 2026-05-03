@@ -14,12 +14,24 @@ export function createUser({ email, fullName, passwordHash }) {
   if (usersByEmail.has(key)) {
     return { ok: false, reason: 'EMAIL_TAKEN' }
   }
+  const createdAt = Date.now()
   usersByEmail.set(key, {
     email: key,
     fullName: String(fullName || '').trim(),
     passwordHash,
+    createdAt,
   })
   return { ok: true }
+}
+
+export function updatePasswordHash(email, newPasswordHash) {
+  const key = normalizeEmail(email)
+  const row = usersByEmail.get(key)
+  if (!row) {
+    return false
+  }
+  row.passwordHash = newPasswordHash
+  return true
 }
 
 export function findUser(email) {
@@ -48,7 +60,11 @@ export function getUserFromSessionToken(token) {
   if (!user) {
     return null
   }
-  return { email: user.email, fullName: user.fullName }
+  return {
+    email: user.email,
+    fullName: user.fullName,
+    createdAt: user.createdAt ?? null,
+  }
 }
 
 export function destroySession(token) {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { AUTH_TOKEN_KEY } from '../constants/auth'
 
 /**
@@ -7,6 +7,11 @@ import { AUTH_TOKEN_KEY } from '../constants/auth'
 export function useAuthUser() {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [refetchKey, setRefetchKey] = useState(0)
+
+  const refetch = useCallback(() => {
+    setRefetchKey((k) => k + 1)
+  }, [])
 
   useEffect(() => {
     let cancelled = false
@@ -24,6 +29,8 @@ export function useAuthUser() {
         return
       }
 
+      const isInitial = refetchKey === 0
+
       try {
         const res = await fetch('/api/auth/me', {
           headers: { Authorization: `Bearer ${token}` },
@@ -40,7 +47,7 @@ export function useAuthUser() {
           setUser(null)
         }
       } finally {
-        if (!cancelled) {
+        if (!cancelled && isInitial) {
           setLoading(false)
         }
       }
@@ -49,7 +56,7 @@ export function useAuthUser() {
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [refetchKey])
 
-  return { user, loading }
+  return { user, loading, refetch }
 }

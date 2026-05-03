@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Info, LockKeyhole, Mail, UserRound } from 'lucide-react'
+import { Eye, EyeOff, Info, LockKeyhole, Mail, UserRound } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import LanguageSwitcher from '../components/LanguageSwitcher'
 import { AUTH_TOKEN_KEY } from '../constants/auth'
@@ -43,6 +43,8 @@ const copyByLanguage = {
     authNetwork:
       'Sunucuya bağlanılamadı. Geliştirme sunucusunu (npm run dev) çalıştırdığınızdan emin olun.',
     authGeneric: 'İşlem tamamlanamadı. Tekrar deneyin.',
+    showPassword: 'Şifreyi göster',
+    hidePassword: 'Şifreyi gizle',
   },
   en: {
     welcomeTitle: 'Welcome to smart investment planning',
@@ -81,20 +83,32 @@ const copyByLanguage = {
     authNetwork:
       'Could not reach the server. Make sure the dev server is running (npm run dev).',
     authGeneric: 'Something went wrong. Please try again.',
+    showPassword: 'Show password',
+    hidePassword: 'Hide password',
   },
 }
 
 const inputClass =
   'w-full rounded-xl border border-slate-700 bg-slate-950 py-3 pl-10 pr-3 text-base text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-300/30'
 
+const passwordFieldClass =
+  'w-full rounded-xl border border-slate-700 bg-slate-950 py-3 pl-10 pr-11 text-base text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-300/30'
+
 export default function LoginPage({ onLogin }) {
   const { language } = useLanguage()
   const copy = copyByLanguage[language] || copyByLanguage.tr
   const [panel, setPanel] = useState('register')
   const [authError, setAuthError] = useState('')
+  const [showSignInPassword, setShowSignInPassword] = useState(false)
+  const [showSignUpPassword, setShowSignUpPassword] = useState(false)
+  /** Tarayıcı otomatik doldurmayı ilk yüklemede engellemek için; alana tıklanınca kalkar */
+  const [signInFieldsLocked, setSignInFieldsLocked] = useState(true)
+  const [signUpFieldsLocked, setSignUpFieldsLocked] = useState(true)
 
   const switchPanel = (next) => {
     setAuthError('')
+    setSignInFieldsLocked(true)
+    setSignUpFieldsLocked(true)
     setPanel(next)
   }
 
@@ -292,6 +306,7 @@ export default function LoginPage({ onLogin }) {
                       <form
                         onSubmit={signInForm.handleSubmit(submitSignIn)}
                         className="space-y-5"
+                        autoComplete="off"
                       >
                         <div>
                           <label
@@ -305,7 +320,7 @@ export default function LoginPage({ onLogin }) {
                             <input
                               id="signin-email"
                               type="email"
-                              autoComplete="email"
+                              autoComplete="off"
                               placeholder={copy.emailPlaceholder}
                               className={inputClass}
                               {...signInForm.register('email', {
@@ -315,6 +330,8 @@ export default function LoginPage({ onLogin }) {
                                   message: copy.emailInvalid,
                                 },
                               })}
+                              readOnly={signInFieldsLocked}
+                              onFocus={() => setSignInFieldsLocked(false)}
                             />
                           </div>
                           {signInForm.formState.errors.email && (
@@ -334,12 +351,36 @@ export default function LoginPage({ onLogin }) {
                             <LockKeyhole className="pointer-events-none absolute left-3 top-1/2 size-[18px] -translate-y-1/2 text-slate-400" />
                             <input
                               id="signin-password"
-                              type="password"
-                              autoComplete="current-password"
+                              type={showSignInPassword ? 'text' : 'password'}
+                              autoComplete="off"
                               placeholder="••••••••"
-                              className={inputClass}
-                              {...signInForm.register('password')}
+                              className={passwordFieldClass}
+                              {...signInForm.register('password', {
+                                required: copy.passwordRequired,
+                                minLength: {
+                                  value: 6,
+                                  message: copy.passwordLength,
+                                },
+                              })}
+                              readOnly={signInFieldsLocked}
+                              onFocus={() => setSignInFieldsLocked(false)}
                             />
+                            <button
+                              type="button"
+                              tabIndex={-1}
+                              className="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg p-1.5 text-slate-400 transition hover:bg-slate-800 hover:text-slate-200"
+                              aria-label={
+                                showSignInPassword ? copy.hidePassword : copy.showPassword
+                              }
+                              aria-pressed={showSignInPassword}
+                              onClick={() => setShowSignInPassword((v) => !v)}
+                            >
+                              {showSignInPassword ? (
+                                <EyeOff className="size-[18px]" aria-hidden />
+                              ) : (
+                                <Eye className="size-[18px]" aria-hidden />
+                              )}
+                            </button>
                           </div>
                           {signInForm.formState.errors.password && (
                             <p className="mt-1 text-xs text-rose-400">
@@ -365,6 +406,7 @@ export default function LoginPage({ onLogin }) {
                       <form
                         onSubmit={signUpForm.handleSubmit(submitSignUp)}
                         className="space-y-5"
+                        autoComplete="off"
                       >
                         <div>
                           <label
@@ -378,13 +420,15 @@ export default function LoginPage({ onLogin }) {
                             <input
                               id="signup-name"
                               type="text"
-                              autoComplete="name"
+                              autoComplete="off"
                               placeholder={copy.namePlaceholder}
                               className={inputClass}
                               {...signUpForm.register('fullName', {
                                 required: copy.nameRequired,
                                 minLength: { value: 2, message: copy.nameRequired },
                               })}
+                              readOnly={signUpFieldsLocked}
+                              onFocus={() => setSignUpFieldsLocked(false)}
                             />
                           </div>
                           {signUpForm.formState.errors.fullName && (
@@ -405,7 +449,7 @@ export default function LoginPage({ onLogin }) {
                             <input
                               id="signup-email"
                               type="email"
-                              autoComplete="email"
+                              autoComplete="off"
                               placeholder={copy.emailPlaceholder}
                               className={inputClass}
                               {...signUpForm.register('email', {
@@ -415,6 +459,8 @@ export default function LoginPage({ onLogin }) {
                                   message: copy.emailInvalid,
                                 },
                               })}
+                              readOnly={signUpFieldsLocked}
+                              onFocus={() => setSignUpFieldsLocked(false)}
                             />
                           </div>
                           {signUpForm.formState.errors.email && (
@@ -434,10 +480,10 @@ export default function LoginPage({ onLogin }) {
                             <LockKeyhole className="pointer-events-none absolute left-3 top-1/2 size-[18px] -translate-y-1/2 text-slate-400" />
                             <input
                               id="signup-password"
-                              type="password"
-                              autoComplete="new-password"
+                              type={showSignUpPassword ? 'text' : 'password'}
+                              autoComplete="off"
                               placeholder="••••••••"
-                              className={inputClass}
+                              className={passwordFieldClass}
                               {...signUpForm.register('password', {
                                 required: copy.passwordRequired,
                                 minLength: {
@@ -445,7 +491,25 @@ export default function LoginPage({ onLogin }) {
                                   message: copy.passwordLength,
                                 },
                               })}
+                              readOnly={signUpFieldsLocked}
+                              onFocus={() => setSignUpFieldsLocked(false)}
                             />
+                            <button
+                              type="button"
+                              tabIndex={-1}
+                              className="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg p-1.5 text-slate-400 transition hover:bg-slate-800 hover:text-slate-200"
+                              aria-label={
+                                showSignUpPassword ? copy.hidePassword : copy.showPassword
+                              }
+                              aria-pressed={showSignUpPassword}
+                              onClick={() => setShowSignUpPassword((v) => !v)}
+                            >
+                              {showSignUpPassword ? (
+                                <EyeOff className="size-[18px]" aria-hidden />
+                              ) : (
+                                <Eye className="size-[18px]" aria-hidden />
+                              )}
+                            </button>
                           </div>
                           {signUpForm.formState.errors.password && (
                             <p className="mt-1 text-xs text-rose-400">
