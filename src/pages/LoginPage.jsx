@@ -37,6 +37,11 @@ const copyByLanguage = {
     disclaimerBadge: 'Akademik demo',
     disclaimerText:
       'Bu uygulama Dumlupınar Üniversitesi Bilgisayar Mühendisliği bitirme projesi kapsamında geliştirilmiştir. Gösterilen veriler ve öneriler yalnızca öğrenme ve sunum amaçlıdır; gerçek yatırım tavsiyesi değildir ve ticari karar için kullanılmamalıdır.',
+    authInvalidCredentials: 'E-posta veya şifre hatalı.',
+    authEmailTaken: 'Bu e-posta ile zaten kayıt var.',
+    authNetwork:
+      'Sunucuya bağlanılamadı. Geliştirme sunucusunu (npm run dev) çalıştırdığınızdan emin olun.',
+    authGeneric: 'İşlem tamamlanamadı. Tekrar deneyin.',
   },
   en: {
     welcomeTitle: 'Welcome to smart investment planning',
@@ -70,8 +75,15 @@ const copyByLanguage = {
     disclaimerBadge: 'Academic demo',
     disclaimerText:
       'Built as a graduation project for the Computer Engineering program at Dumlupınar University. All content is for demonstration and educational purposes only; it is not investment advice and must not be used for trading or commercial decisions.',
+    authInvalidCredentials: 'Incorrect email or password.',
+    authEmailTaken: 'An account with this email already exists.',
+    authNetwork:
+      'Could not reach the server. Make sure the dev server is running (npm run dev).',
+    authGeneric: 'Something went wrong. Please try again.',
   },
 }
+
+const AUTH_TOKEN_KEY = 'fin-smart-token'
 
 const inputClass =
   'w-full rounded-xl border border-slate-700 bg-slate-950 py-3 pl-10 pr-3 text-base text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-300/30'
@@ -80,6 +92,12 @@ export default function LoginPage({ onLogin }) {
   const { language } = useLanguage()
   const copy = copyByLanguage[language] || copyByLanguage.tr
   const [panel, setPanel] = useState('register')
+  const [authError, setAuthError] = useState('')
+
+  const switchPanel = (next) => {
+    setAuthError('')
+    setPanel(next)
+  }
 
   const signInForm = useForm({
     defaultValues: { email: '', password: '' },
@@ -89,12 +107,60 @@ export default function LoginPage({ onLogin }) {
     defaultValues: { fullName: '', email: '', password: '' },
   })
 
-  const submitSignIn = () => {
-    onLogin()
+  const submitSignIn = async (data) => {
+    setAuthError('')
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: data.email, password: data.password }),
+      })
+      const payload = await res.json().catch(() => ({}))
+      if (!res.ok) {
+        setAuthError(
+          res.status === 401
+            ? copy.authInvalidCredentials
+            : copy.authGeneric,
+        )
+        return
+      }
+      if (payload.token) {
+        sessionStorage.setItem(AUTH_TOKEN_KEY, payload.token)
+      }
+      onLogin()
+    } catch {
+      setAuthError(copy.authNetwork)
+    }
   }
 
-  const submitSignUp = () => {
-    onLogin()
+  const submitSignUp = async (data) => {
+    setAuthError('')
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fullName: data.fullName,
+          email: data.email,
+          password: data.password,
+        }),
+      })
+      const payload = await res.json().catch(() => ({}))
+      if (!res.ok) {
+        if (res.status === 409) {
+          setAuthError(copy.authEmailTaken)
+        } else {
+          setAuthError(copy.authGeneric)
+        }
+        return
+      }
+      if (payload.token) {
+        sessionStorage.setItem(AUTH_TOKEN_KEY, payload.token)
+      }
+      onLogin()
+    } catch {
+      setAuthError(copy.authNetwork)
+    }
   }
 
   return (
@@ -151,7 +217,7 @@ export default function LoginPage({ onLogin }) {
                       <button
                         type="button"
                         data-testid="promo-go-register"
-                        onClick={() => setPanel('register')}
+                        onClick={() => switchPanel('register')}
                         className="w-full rounded-xl border-2 border-white/90 bg-transparent px-4 py-3 text-base font-semibold text-white transition hover:bg-white/10"
                       >
                         {copy.goRegister}
@@ -166,7 +232,7 @@ export default function LoginPage({ onLogin }) {
                       <button
                         type="button"
                         data-testid="promo-go-login"
-                        onClick={() => setPanel('login')}
+                        onClick={() => switchPanel('login')}
                         className="w-full rounded-xl border-2 border-white/90 bg-transparent px-4 py-3 text-base font-semibold text-white transition hover:bg-white/10"
                       >
                         {copy.goLogin}
@@ -181,7 +247,7 @@ export default function LoginPage({ onLogin }) {
                 <div className="mb-4 flex gap-2 md:hidden">
                   <button
                     type="button"
-                    onClick={() => setPanel('login')}
+                    onClick={() => switchPanel('login')}
                     className={`flex-1 rounded-lg py-2 text-sm font-semibold transition ${
                       panel === 'login'
                         ? 'bg-emerald-500 text-slate-950'
@@ -192,7 +258,7 @@ export default function LoginPage({ onLogin }) {
                   </button>
                   <button
                     type="button"
-                    onClick={() => setPanel('register')}
+                    onClick={() => switchPanel('register')}
                     className={`flex-1 rounded-lg py-2 text-sm font-semibold transition ${
                       panel === 'register'
                         ? 'bg-emerald-500 text-slate-950'
@@ -202,6 +268,15 @@ export default function LoginPage({ onLogin }) {
                     {copy.mobileTabRegister}
                   </button>
                 </div>
+
+                {authError ? (
+                  <div
+                    className="mb-4 rounded-xl border border-rose-500/40 bg-rose-500/10 px-4 py-2 text-sm text-rose-200"
+                    role="alert"
+                  >
+                    {authError}
+                  </div>
+                ) : null}
 
                 <div className="relative min-h-[380px] overflow-hidden">
                   <div
