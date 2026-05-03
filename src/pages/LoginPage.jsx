@@ -107,32 +107,31 @@ export default function LoginPage({ onLogin }) {
           <LanguageSwitcher />
         </div>
 
-        <aside
-          role="note"
-          aria-label={copy.disclaimerBadge}
-          className="rounded-2xl border border-amber-400/35 bg-gradient-to-r from-amber-500/15 to-amber-600/10 px-4 py-3.5 shadow-lg shadow-amber-950/20 md:px-5 md:py-4"
-        >
-          <div className="flex gap-3 md:gap-4">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-400/15 text-amber-200 ring-1 ring-amber-400/25">
-              <Info className="size-5" aria-hidden />
-            </div>
-            <div className="min-w-0 flex-1 space-y-1">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-amber-200/95 md:text-xs">
-                {copy.disclaimerBadge}
-              </p>
-              <p className="text-sm leading-relaxed text-amber-50/95 md:text-[15px]">
-                {copy.disclaimerText}
-              </p>
-            </div>
-          </div>
-        </aside>
-
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,640px)] lg:items-start">
           <section className="flex flex-col justify-center space-y-4 lg:pr-4">
             <h1 className="text-3xl font-bold tracking-tight text-white md:text-4xl">
               {copy.welcomeTitle}
             </h1>
             <p className="text-slate-300">{copy.welcomeBody}</p>
+            <aside
+              role="note"
+              aria-label={copy.disclaimerBadge}
+              className="mt-1 max-w-xl rounded-2xl border border-amber-400/45 bg-gradient-to-br from-slate-900/85 via-slate-900/70 to-emerald-950/45 px-4 py-3.5 shadow-lg shadow-emerald-950/25 backdrop-blur-sm md:px-5 md:py-4"
+            >
+              <div className="flex gap-3 md:gap-4">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-amber-400/35 bg-amber-400/10 text-amber-300">
+                  <Info className="size-5" aria-hidden />
+                </div>
+                <div className="min-w-0 flex-1 space-y-1.5">
+                  <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-amber-400 md:text-xs">
+                    {copy.disclaimerBadge}
+                  </p>
+                  <p className="text-sm leading-relaxed text-slate-200 md:text-[15px]">
+                    {copy.disclaimerText}
+                  </p>
+                </div>
+              </div>
+            </aside>
           </section>
 
           <div className="relative overflow-hidden rounded-3xl border border-slate-700 bg-slate-900 shadow-2xl shadow-black/40">
