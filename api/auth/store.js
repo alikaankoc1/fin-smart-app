@@ -34,3 +34,23 @@ export function createSession(email) {
   })
   return token
 }
+
+export function getUserFromSessionToken(token) {
+  const key = String(token || '').trim()
+  if (!key) {
+    return null
+  }
+  const row = sessions.get(key)
+  if (!row) {
+    return null
+  }
+  const user = findUser(row.email)
+  if (!user) {
+    return null
+  }
+  return { email: user.email, fullName: user.fullName }
+}
+
+export function destroySession(token) {
+  return sessions.delete(String(token || '').trim())
+}

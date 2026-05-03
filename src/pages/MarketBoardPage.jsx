@@ -3,6 +3,7 @@ import { RefreshCw } from 'lucide-react'
 import { getStatusMessages, resolveFetchErrorMessage } from '../copy/statusMessages'
 import LanguageSwitcher from '../components/LanguageSwitcher'
 import useLanguage from '../hooks/useLanguage'
+import { useAuthUser } from '../hooks/useAuthUser'
 import { fetchMarketBoardData } from '../services/marketData'
 
 const moneyFormatter = new Intl.NumberFormat('tr-TR', {
@@ -14,6 +15,7 @@ export default function MarketBoardPage({ onSelectInstrument, onGoTestPage }) {
   const { language } = useLanguage()
   const isEn = language === 'en'
   const messages = useMemo(() => getStatusMessages(language), [language])
+  const { user: authUser, loading: authUserLoading } = useAuthUser()
   const [rows, setRows] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
@@ -79,7 +81,15 @@ export default function MarketBoardPage({ onSelectInstrument, onGoTestPage }) {
                 : 'Ücretsiz kaynaklardan dakikalık güncellenen piyasa görünümü'}
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center justify-end gap-2 md:gap-3">
+            {authUserLoading ? (
+              <span className="text-sm text-slate-500">…</span>
+            ) : authUser ? (
+              <span className="max-w-[200px] truncate text-sm font-medium text-slate-200 md:max-w-xs">
+                {isEn ? 'Hello,' : 'Merhaba,'}{' '}
+                <span className="text-emerald-300">{authUser.fullName}</span>
+              </span>
+            ) : null}
             <LanguageSwitcher />
             <button
               type="button"

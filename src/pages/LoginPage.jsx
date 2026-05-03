@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Info, LockKeyhole, Mail, UserRound } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import LanguageSwitcher from '../components/LanguageSwitcher'
+import { AUTH_TOKEN_KEY } from '../constants/auth'
 import useLanguage from '../hooks/useLanguage'
 
 const copyByLanguage = {
@@ -82,8 +83,6 @@ const copyByLanguage = {
     authGeneric: 'Something went wrong. Please try again.',
   },
 }
-
-const AUTH_TOKEN_KEY = 'fin-smart-token'
 
 const inputClass =
   'w-full rounded-xl border border-slate-700 bg-slate-950 py-3 pl-10 pr-3 text-base text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-300/30'
