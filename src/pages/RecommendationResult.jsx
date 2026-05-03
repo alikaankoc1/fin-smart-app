@@ -283,80 +283,89 @@ export default function RecommendationResult({ onBack }) {
   }, [activeAllocation, scenarioByAsset])
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950 px-4 py-8">
-      <section className="w-full max-w-6xl rounded-3xl border border-emerald-200/20 bg-slate-900/70 p-6 shadow-2xl shadow-black/40 backdrop-blur md:p-10">
-        <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+    <main className="flex min-h-screen items-start justify-center bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950 px-4 py-8">
+      <section className="w-full max-w-5xl rounded-3xl border border-emerald-200/20 bg-slate-900/70 p-6 shadow-2xl shadow-black/40 backdrop-blur md:p-10">
+        <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
           <button
             type="button"
             onClick={onBack}
-            className="inline-flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm font-medium text-slate-200 hover:bg-slate-800"
+            className="inline-flex items-center gap-2 rounded-lg border border-slate-700/80 bg-slate-900/50 px-3 py-2 text-sm text-slate-300 transition hover:border-slate-600 hover:bg-slate-800/80 hover:text-white"
           >
-            <ArrowLeft size={16} />
-            {isEn ? 'Back To Market' : 'Piyasa Ekranına Dön'}
+            <ArrowLeft size={16} aria-hidden />
+            {isEn ? 'Back to market' : 'Piyasa ekranına dön'}
           </button>
           <LanguageSwitcher />
-          <div className="text-right">
-            <h1 className="text-2xl font-bold text-white md:text-3xl">
-              {isEn ? 'Recommendation Result' : 'Öneri Sonucu'}
-            </h1>
-            <p className="text-sm text-slate-400">
-              {isEn ? 'Risk profile' : 'Risk profili'}:{' '}
-              <span className="font-semibold text-emerald-300">{selectedProfile}</span>
-            </p>
-            <p className="text-sm text-slate-400">
-              {isEn ? 'Total balance' : 'Toplam bakiye'}:{' '}
-              <span className="font-semibold text-white">{moneyFormatter.format(totalBalance)}</span>
-            </p>
-          </div>
         </div>
 
-        <div className="mb-6 rounded-2xl border border-emerald-300/20 bg-emerald-400/5 p-4">
-          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-            <p className="text-sm text-slate-300">
-              {isEn ? 'Investment mode' : 'Yatırım modu seçimi'}
-            </p>
-            <div className="inline-flex rounded-xl border border-slate-700 bg-slate-900/60 p-1">
+        <header className="mb-10">
+          <h1 className="text-3xl font-semibold tracking-tight text-white md:text-4xl">
+            {isEn ? 'Recommendation' : 'Öneri sonucu'}
+          </h1>
+          <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-slate-400">
+            {isEn
+              ? 'Projection bands are illustrative only—not investment advice.'
+              : 'Bantlar yalnızca gösterim amaçlıdır; yatırım tavsiyesi değildir.'}
+          </p>
+          <div className="mt-6 flex flex-wrap gap-2">
+            <span className="inline-flex items-center rounded-full border border-slate-700/90 bg-slate-900/80 px-4 py-1.5 text-sm text-slate-300">
+              {isEn ? 'Risk' : 'Risk'}:{' '}
+              <span className="ml-1.5 font-medium text-emerald-400">{selectedProfile}</span>
+            </span>
+            <span className="inline-flex items-center rounded-full border border-slate-700/90 bg-slate-900/80 px-4 py-1.5 text-sm text-slate-300">
+              {isEn ? 'Balance' : 'Bakiye'}:{' '}
+              <span className="ml-1.5 font-medium tabular-nums text-white">
+                {moneyFormatter.format(totalBalance)}
+              </span>
+            </span>
+          </div>
+        </header>
+
+        <section className="mb-10 rounded-2xl border border-slate-800 bg-slate-900/40 p-6 md:p-8">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+            {isEn ? 'Investment mode' : 'Yatırım modu'}
+          </p>
+          <div className="mt-4 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+            <div className="inline-flex rounded-lg border border-slate-700/80 bg-slate-950/60 p-1">
               {modeOptions.map((option) => (
                 <button
                   key={option.id}
                   type="button"
                   onClick={() => setInvestmentMode(option.id)}
-                  className={`rounded-lg px-3 py-1.5 text-xs font-medium transition ${
+                  className={`rounded-md px-4 py-2 text-sm font-medium transition ${
                     investmentMode === option.id
-                      ? 'bg-emerald-500 text-slate-950'
-                      : 'text-slate-300 hover:bg-slate-800'
+                      ? 'bg-emerald-500 text-slate-950 shadow-sm'
+                      : 'text-slate-400 hover:text-slate-200'
                   }`}
                 >
                   {isEn
                     ? option.id === 'mixed'
-                      ? 'Auto Basket'
-                      : 'Single Asset'
+                      ? 'Auto basket'
+                      : 'Single asset'
                     : option.label}
                 </button>
               ))}
             </div>
+            <p className="max-w-md text-sm leading-relaxed text-slate-500">
+              {investmentMode === 'mixed'
+                ? isEn
+                  ? 'Weights follow your risk profile.'
+                  : 'Ağırlıklar risk profilinize göre hesaplanır.'
+                : isEn
+                  ? 'All capital is allocated to one instrument.'
+                  : 'Tüm tutar tek bir varlıkta gösterilir.'}
+            </p>
           </div>
 
-          <p className="mb-2 text-xs text-slate-400">
-            {investmentMode === 'mixed'
-              ? isEn
-                ? 'Auto Basket selected: allocation is based on your risk profile.'
-                : 'Otomatik Sepet seçili: risk profiline göre dağılım gösteriliyor.'
-              : isEn
-                ? 'Single Asset selected: entire portfolio is assigned to selected asset.'
-                : 'Tek varlık seçili: portföyün tamamı seçilen varlığa atanır.'}
-          </p>
-
           {investmentMode === 'single' && (
-            <div className="mb-3 flex flex-wrap items-center gap-2">
-              <label htmlFor="single-asset" className="text-xs text-slate-400">
-                {isEn ? 'Single asset selection' : 'Tek varlık seçimi'}
+            <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-slate-800 pt-6">
+              <label htmlFor="single-asset" className="text-sm text-slate-400">
+                {isEn ? 'Instrument' : 'Varlık'}
               </label>
               <select
                 id="single-asset"
                 value={singleAssetId}
                 onChange={(event) => setSingleAssetId(event.target.value)}
-                className="rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 text-xs text-slate-200 outline-none transition focus:border-emerald-400"
+                className="rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-200 outline-none transition focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/30"
               >
                 {singleAssetOptions.map((option) => (
                   <option key={option.id} value={option.id}>
@@ -366,33 +375,39 @@ export default function RecommendationResult({ onBack }) {
               </select>
             </div>
           )}
+        </section>
 
-          <p className="text-sm text-slate-300">
-            {isEn
-              ? 'Total Portfolio Projection (Top Band)'
-              : 'Toplam Portföy Projeksiyonu (Üst Bant)'}
+        <section className="mb-12 rounded-2xl border border-slate-800 bg-slate-950/50 p-6 md:p-8">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+            {isEn ? 'Total portfolio projection' : 'Toplam portföy projeksiyonu'}
           </p>
-          <div className="mt-2 grid grid-cols-1 gap-2 text-sm md:grid-cols-3">
-            <p className="rounded-lg border border-slate-700 bg-slate-900/70 px-3 py-2 text-slate-300">
-              {isEn ? 'Pessimistic' : 'Kötümser'}:{' '}
-              <span className="font-semibold text-rose-300">{moneyFormatter.format(portfolioBand.pessimistic)}</span>
-            </p>
-            <p className="rounded-lg border border-slate-700 bg-slate-900/70 px-3 py-2 text-slate-300">
-              {isEn ? 'Base' : 'Baz'}:{' '}
-              <span className="font-semibold text-emerald-300">{moneyFormatter.format(portfolioBand.base)}</span>
-            </p>
-            <p className="rounded-lg border border-slate-700 bg-slate-900/70 px-3 py-2 text-slate-300">
-              {isEn ? 'Optimistic' : 'İyimser'}:{' '}
-              <span className="font-semibold text-cyan-300">{moneyFormatter.format(portfolioBand.optimistic)}</span>
-            </p>
+          <div className="mt-6 grid gap-8 md:grid-cols-3 md:gap-6">
+            <div>
+              <p className="text-xs text-slate-500">{isEn ? 'Pessimistic' : 'Kötümser'}</p>
+              <p className="mt-1 text-2xl font-semibold tabular-nums text-rose-300 md:text-xl">
+                {moneyFormatter.format(portfolioBand.pessimistic)}
+              </p>
+            </div>
+            <div className="md:border-x md:border-slate-800 md:px-6">
+              <p className="text-xs text-slate-500">{isEn ? 'Base' : 'Baz'}</p>
+              <p className="mt-1 text-2xl font-semibold tabular-nums text-emerald-300 md:text-xl">
+                {moneyFormatter.format(portfolioBand.base)}
+              </p>
+            </div>
+            <div>
+              <p className="text-xs text-slate-500">{isEn ? 'Optimistic' : 'İyimser'}</p>
+              <p className="mt-1 text-2xl font-semibold tabular-nums text-cyan-300 md:text-xl">
+                {moneyFormatter.format(portfolioBand.optimistic)}
+              </p>
+            </div>
           </div>
-        </div>
+        </section>
 
-        <div
+        <section
           className={
             investmentMode === 'single'
-              ? 'grid grid-cols-1 gap-5 md:mx-auto md:max-w-lg'
-              : 'grid grid-cols-1 gap-5 md:grid-cols-3'
+              ? 'mx-auto grid max-w-lg grid-cols-1 gap-8'
+              : 'grid grid-cols-1 gap-8 md:grid-cols-3'
           }
         >
           {activeAllocation.map(({ key, name, ratio, Icon }) => {
@@ -405,46 +420,69 @@ export default function RecommendationResult({ onBack }) {
             return (
               <article
                 key={key}
-                className="rounded-2xl border border-slate-700 bg-slate-900/80 p-6 shadow-xl shadow-black/30 md:p-6"
+                className="flex flex-col rounded-2xl border border-slate-800 bg-slate-900/50 shadow-lg shadow-black/20"
               >
-                <div className="mb-3 inline-flex rounded-lg bg-emerald-400/10 p-2 text-emerald-300">
-                  <Icon size={22} />
+                <div className="flex items-start justify-between gap-4 border-b border-slate-800 p-5">
+                  <div className="flex min-w-0 items-center gap-3">
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400">
+                      <Icon size={22} aria-hidden />
+                    </div>
+                    <div className="min-w-0">
+                      <h2 className="truncate font-medium text-white">{name}</h2>
+                      <p className="mt-0.5 text-sm text-slate-500">
+                        %{Math.round(ratio * 100)}
+                        {investmentMode === 'single'
+                          ? isEn
+                            ? ' · full portfolio'
+                            : ' · tüm portföy'
+                          : ''}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-[11px] uppercase tracking-wide text-slate-500">
+                      {isEn ? 'Amount' : 'Tutar'}
+                    </p>
+                    <p className="mt-0.5 text-lg font-semibold tabular-nums text-white">
+                      {moneyFormatter.format(allocatedAmount)}
+                    </p>
+                  </div>
                 </div>
-                <p className="text-base text-slate-300">{name}</p>
-                <p className="mt-1 text-2xl font-bold text-white">
-                  {moneyFormatter.format(allocatedAmount)}
-                </p>
-                <p className="mt-2 text-base text-emerald-300">
-                  %{Math.round(ratio * 100)}{' '}
-                  {investmentMode === 'single'
-                    ? isEn
-                      ? '(Full portfolio)'
-                      : '(Tüm portföy)'
-                    : ''}
-                </p>
 
-                <div className="mt-5 space-y-2 rounded-xl border border-slate-700/80 bg-slate-950/40 p-4 text-sm">
+                <div className="flex flex-1 flex-col p-5 pt-4">
                   {scenario ? (
                     <>
-                      {volatilityAlert && (
-                        <div className={`mb-2 rounded-lg border px-3 py-2.5 ${volatilityAlert.className}`}>
-                          <p className="text-sm font-semibold">{volatilityAlert.label}</p>
-                          <p className="mt-1 text-xs opacity-90">{volatilityAlert.detail}</p>
+                      {volatilityAlert ? (
+                        <div
+                          className={`mb-5 rounded-lg border px-3 py-2.5 text-xs leading-snug ${volatilityAlert.className}`}
+                        >
+                          <p className="font-semibold">{volatilityAlert.label}</p>
+                          <p className="mt-1 opacity-90">{volatilityAlert.detail}</p>
                         </div>
-                      )}
-                      <p className="text-slate-300">
-                        {isEn ? 'Pessimistic' : 'Kötümser'}:{' '}
-                        <span className="font-semibold text-rose-300">{moneyFormatter.format(scenario.pessimistic)}</span>
+                      ) : null}
+                      <dl className="space-y-3 text-sm">
+                        <div className="flex items-baseline justify-between gap-3">
+                          <dt className="text-slate-500">{isEn ? 'Pessimistic' : 'Kötümser'}</dt>
+                          <dd className="font-medium tabular-nums text-rose-300">
+                            {moneyFormatter.format(scenario.pessimistic)}
+                          </dd>
+                        </div>
+                        <div className="flex items-baseline justify-between gap-3">
+                          <dt className="text-slate-500">{isEn ? 'Base' : 'Baz'}</dt>
+                          <dd className="font-medium tabular-nums text-emerald-300">
+                            {moneyFormatter.format(scenario.base)}
+                          </dd>
+                        </div>
+                        <div className="flex items-baseline justify-between gap-3">
+                          <dt className="text-slate-500">{isEn ? 'Optimistic' : 'İyimser'}</dt>
+                          <dd className="font-medium tabular-nums text-cyan-300">
+                            {moneyFormatter.format(scenario.optimistic)}
+                          </dd>
+                        </div>
+                      </dl>
+                      <p className="mt-5 border-t border-slate-800 pt-4 text-sm leading-relaxed text-slate-500">
+                        {scenario.comment}
                       </p>
-                      <p className="text-slate-300">
-                        {isEn ? 'Base' : 'Baz'}:{' '}
-                        <span className="font-semibold text-emerald-300">{moneyFormatter.format(scenario.base)}</span>
-                      </p>
-                      <p className="text-slate-300">
-                        {isEn ? 'Optimistic' : 'İyimser'}:{' '}
-                        <span className="font-semibold text-cyan-300">{moneyFormatter.format(scenario.optimistic)}</span>
-                      </p>
-                      <p className="pt-1 text-sm text-slate-400">{scenario.comment}</p>
                     </>
                   ) : (
                     <p className="text-sm text-slate-500">
@@ -455,7 +493,7 @@ export default function RecommendationResult({ onBack }) {
               </article>
             )
           })}
-        </div>
+        </section>
       </section>
     </main>
   )
