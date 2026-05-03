@@ -1,3 +1,6 @@
+/**
+ * Sample route protected by Bearer token — reuse this pattern for future APIs.
+ */
 import { requireAuthUser } from '../lib/requireAuth.js'
 
 function setCors(res) {
@@ -20,11 +23,14 @@ export default async function handler(req, res) {
   }
 
   const user = requireAuthUser(req)
-
   if (!user) {
     res.status(401).json({ error: 'UNAUTHORIZED' })
     return
   }
 
-  res.status(200).json({ user })
+  res.status(200).json({
+    ok: true,
+    message: 'Authenticated request accepted.',
+    user,
+  })
 }

@@ -7,6 +7,7 @@ import meHandler from './api/auth/me.js'
 import registerHandler from './api/auth/register.js'
 import latestHandler from './api/market/latest.js'
 import historyHandler from './api/market/history.js'
+import exampleProtectedHandler from './api/example/protected.js'
 import { readJsonBody } from './api/lib/readJsonBody.js'
 
 function createApiMiddleware(handler, options = {}) {
@@ -90,6 +91,10 @@ export default defineConfig({
         server.middlewares.use(
           '/api/auth/logout',
           createApiMiddleware(logoutHandler),
+        )
+        server.middlewares.use(
+          '/api/example/protected',
+          createApiMiddleware(exampleProtectedHandler),
         )
         server.middlewares.use('/api/market/latest', createApiMiddleware(latestHandler))
         server.middlewares.use('/api/market/history', createApiMiddleware(historyHandler))
