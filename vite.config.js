@@ -6,6 +6,7 @@ import logoutHandler from './api/auth/logout.js'
 import meHandler from './api/auth/me.js'
 import registerHandler from './api/auth/register.js'
 import updatePasswordHandler from './api/auth/update-password.js'
+import deleteAccountHandler from './api/auth/delete-account.js'
 import latestHandler from './api/market/latest.js'
 import historyHandler from './api/market/history.js'
 import exampleProtectedHandler from './api/example/protected.js'
@@ -91,6 +92,10 @@ export default defineConfig({
         server.middlewares.use(
           '/api/auth/update-password',
           createApiMiddleware(updatePasswordHandler, { parseJsonBody: true }),
+        )
+        server.middlewares.use(
+          '/api/auth/delete-account',
+          createApiMiddleware(deleteAccountHandler, { parseJsonBody: true }),
         )
         server.middlewares.use('/api/auth/me', createApiMiddleware(meHandler))
         server.middlewares.use(

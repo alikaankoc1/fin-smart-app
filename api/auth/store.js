@@ -70,3 +70,19 @@ export function getUserFromSessionToken(token) {
 export function destroySession(token) {
   return sessions.delete(String(token || '').trim())
 }
+
+/**
+ * Remove user and every session for that email (e.g. account deletion).
+ * @returns {boolean} true if a user row existed
+ */
+export function deleteUserAndSessions(email) {
+  const key = normalizeEmail(email)
+  const tokensToRemove = []
+  for (const [t, row] of sessions.entries()) {
+    if (row.email === key) {
+      tokensToRemove.push(t)
+    }
+  }
+  tokensToRemove.forEach((t) => sessions.delete(t))
+  return usersByEmail.delete(key)
+}

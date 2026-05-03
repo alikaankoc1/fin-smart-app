@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { LogOut, Settings, UserRound } from 'lucide-react'
 import AccountSettingsModal from './AccountSettingsModal'
 import useLanguage from '../hooks/useLanguage'
+import useFinance from '../hooks/useFinance'
 import { useAuthUser } from '../hooks/useAuthUser'
 
 const logoutCopy = {
@@ -24,6 +25,7 @@ export default function AuthUserBar({ onLogout }) {
   const isEn = language === 'en'
   const lc = logoutCopy[language] || logoutCopy.tr
   const { user, loading, refetch } = useAuthUser()
+  const { resetFinance } = useFinance()
   const [menuOpen, setMenuOpen] = useState(false)
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [logoutPromptOpen, setLogoutPromptOpen] = useState(false)
@@ -74,8 +76,14 @@ export default function AuthUserBar({ onLogout }) {
   const performLogout = () => {
     setLogoutPromptOpen(false)
     window.setTimeout(() => {
+      resetFinance()
       onLogout()
     }, 220)
+  }
+
+  const handleAccountDeleted = () => {
+    resetFinance()
+    onLogout()
   }
 
   const openSettings = () => {
@@ -147,6 +155,7 @@ export default function AuthUserBar({ onLogout }) {
         onClose={() => setSettingsOpen(false)}
         user={user}
         onPasswordSuccess={refetch}
+        onAccountDeleted={handleAccountDeleted}
       />
 
       {logoutPromptOpen ? (

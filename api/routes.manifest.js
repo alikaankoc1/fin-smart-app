@@ -40,6 +40,12 @@ export const API_ROUTES = [
     notes: 'Bearer; body currentPassword, newPassword',
   },
   {
+    path: '/api/auth/delete-account',
+    methods: ['POST', 'OPTIONS'],
+    auth: true,
+    notes: 'Bearer; body password — removes user and all sessions',
+  },
+  {
     path: '/api/market/latest',
     methods: ['GET', 'OPTIONS'],
     auth: false,
