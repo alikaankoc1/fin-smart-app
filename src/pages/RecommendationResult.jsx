@@ -35,12 +35,26 @@ const allocationByRiskProfile = {
     { key: 'gram', instrumentId: 'gram', name: 'Gram Altın', ratio: 0.45, Icon: Coins },
     { key: 'silver', instrumentId: 'silver', name: 'Gram Gümüş', ratio: 0.15, Icon: Gem },
   ],
+  İhtiyatlı: [
+    { key: 'usd', instrumentId: 'usd', name: 'Dolar', ratio: 0.2, Icon: BadgeDollarSign },
+    { key: 'eur', instrumentId: 'eur', name: 'Euro', ratio: 0.13, Icon: CircleDollarSign },
+    { key: 'gbp', instrumentId: 'gbp', name: 'Sterlin', ratio: 0.11, Icon: Landmark },
+    { key: 'gram', instrumentId: 'gram', name: 'Gram Altın', ratio: 0.41, Icon: Coins },
+    { key: 'silver', instrumentId: 'silver', name: 'Gram Gümüş', ratio: 0.15, Icon: Gem },
+  ],
   Dengeli: [
     { key: 'usd', instrumentId: 'usd', name: 'Dolar', ratio: 0.25, Icon: BadgeDollarSign },
     { key: 'eur', instrumentId: 'eur', name: 'Euro', ratio: 0.15, Icon: CircleDollarSign },
     { key: 'gbp', instrumentId: 'gbp', name: 'Sterlin', ratio: 0.15, Icon: Landmark },
     { key: 'gram', instrumentId: 'gram', name: 'Gram Altın', ratio: 0.3, Icon: Coins },
     { key: 'silver', instrumentId: 'silver', name: 'Gram Gümüş', ratio: 0.15, Icon: Gem },
+  ],
+  Dinamik: [
+    { key: 'usd', instrumentId: 'usd', name: 'Dolar', ratio: 0.27, Icon: BadgeDollarSign },
+    { key: 'eur', instrumentId: 'eur', name: 'Euro', ratio: 0.17, Icon: CircleDollarSign },
+    { key: 'gbp', instrumentId: 'gbp', name: 'Sterlin', ratio: 0.16, Icon: Landmark },
+    { key: 'gram', instrumentId: 'gram', name: 'Gram Altın', ratio: 0.27, Icon: Coins },
+    { key: 'silver', instrumentId: 'silver', name: 'Gram Gümüş', ratio: 0.13, Icon: Gem },
   ],
   'Büyüme Odaklı': [
     { key: 'usd', instrumentId: 'usd', name: 'Dolar', ratio: 0.28, Icon: BadgeDollarSign },
@@ -61,7 +75,9 @@ const allocationByRiskProfile = {
 const volatilityByProfile = {
   'Çok Muhafazakar': 0.8,
   Muhafazakar: 0.9,
+  İhtiyatlı: 0.95,
   Dengeli: 1,
+  Dinamik: 1.05,
   'Büyüme Odaklı': 1.1,
   Agresif: 1.2,
 }
@@ -69,9 +85,22 @@ const volatilityByProfile = {
 const horizonByProfile = {
   'Çok Muhafazakar': 1,
   Muhafazakar: 1.5,
+  İhtiyatlı: 1.75,
   Dengeli: 2,
+  Dinamik: 2.25,
   'Büyüme Odaklı': 2.5,
   Agresif: 3,
+}
+
+/** Sonuç başlığında İngilizce arayüz için (iç anahtarlar TR kalır). */
+const riskProfileLabelEn = {
+  'Çok Muhafazakar': 'Ultra conservative',
+  Muhafazakar: 'Conservative',
+  İhtiyatlı: 'Cautious',
+  Dengeli: 'Balanced',
+  Dinamik: 'Dynamic',
+  'Büyüme Odaklı': 'Growth-oriented',
+  Agresif: 'Aggressive',
 }
 
 const modeOptions = [
@@ -195,6 +224,9 @@ export default function RecommendationResult({ onBack }) {
   const selectedProfile = allocationByRiskProfile[riskProfile]
     ? riskProfile
     : 'Dengeli'
+  const riskProfileDisplay = isEn
+    ? riskProfileLabelEn[selectedProfile] ?? selectedProfile
+    : selectedProfile
   const allocation = allocationByRiskProfile[selectedProfile]
   const activeAllocation = useMemo(() => {
     if (investmentMode === 'single') {
@@ -309,7 +341,7 @@ export default function RecommendationResult({ onBack }) {
           <div className="mt-6 flex flex-wrap gap-2">
             <span className="inline-flex items-center rounded-full border border-slate-700/90 bg-slate-900/80 px-4 py-1.5 text-sm text-slate-300">
               {isEn ? 'Risk' : 'Risk'}:{' '}
-              <span className="ml-1.5 font-medium text-emerald-400">{selectedProfile}</span>
+              <span className="ml-1.5 font-medium text-emerald-400">{riskProfileDisplay}</span>
             </span>
             <span className="inline-flex items-center rounded-full border border-slate-700/90 bg-slate-900/80 px-4 py-1.5 text-sm text-slate-300">
               {isEn ? 'Balance' : 'Bakiye'}:{' '}

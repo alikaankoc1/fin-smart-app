@@ -7,96 +7,106 @@ import { parseAmountInput } from '../utils/parseAmountInput'
 
 const questionsByLanguage = {
   tr: [
-  {
-    id: 'investmentHorizon',
-    text: 'Yatırım süreniz ne kadar?',
-    options: [
-      { label: '0-1 yıl', score: 1 },
-      { label: '1-3 yıl', score: 3 },
-      { label: '3+ yıl', score: 5 },
-    ],
-  },
-  {
-    id: 'drawdownTolerance',
-    text: 'Ana paranızın %10 değer kaybetmesi sizi ne kadar endişelendirir?',
-    options: [
-      { label: 'Çok endişelendirir', score: 1 },
-      { label: 'Biraz endişelendirir', score: 3 },
-      { label: 'Hiç endişe duymam', score: 5 },
-    ],
-  },
-  {
-    id: 'incomeStability',
-    text: 'Gelirinizin düzenliliği nasıl?',
-    options: [
-      { label: 'Değişken / belirsiz', score: 1 },
-      { label: 'Kısmen düzenli', score: 3 },
-      { label: 'Çok düzenli', score: 5 },
-    ],
-  },
-  {
-    id: 'liquidityNeed',
-    text: 'Yakında bu birikime ihtiyaç duyma olasılığınız nedir?',
-    options: [
-      { label: 'Yüksek', score: 1 },
-      { label: 'Orta', score: 3 },
-      { label: 'Düşük', score: 5 },
-    ],
-  },
-  {
-    id: 'volatilityReaction',
-    text: 'Portföyünüz bir ayda %15 düşerse ne yaparsınız?',
-    options: [
-      { label: 'Hemen satarım', score: 1 },
-      { label: 'Bir kısmını satarım', score: 3 },
-      { label: 'Beklerim / ek alım yaparım', score: 5 },
-    ],
-  },
-  {
-    id: 'experience',
-    text: 'Yatırım tecrübenizi nasıl tanımlarsınız?',
-    options: [
-      { label: 'Yeni başlıyorum', score: 1 },
-      { label: 'Orta seviye', score: 3 },
-      { label: 'Deneyimliyim', score: 5 },
-    ],
-  },
-  {
-    id: 'tracking',
-    text: 'Portföyünüzü ne sıklıkla takip edebilirsiniz?',
-    options: [
-      { label: 'Nadiren', score: 1 },
-      { label: 'Haftalık', score: 3 },
-      { label: 'Günlük', score: 5 },
-    ],
-  },
-  {
-    id: 'returnPriority',
-    text: 'Sizin için hangisi daha öncelikli?',
-    options: [
-      { label: 'Anapara güvenliği', score: 1 },
-      { label: 'Denge', score: 3 },
-      { label: 'Yüksek getiri potansiyeli', score: 5 },
-    ],
-  },
-  {
-    id: 'goal',
-    text: 'Amacınız nedir?',
-    options: [
-      { label: 'Birikimimi korumak', score: 1 },
-      { label: 'Düzenli gelir elde etmek', score: 3 },
-      { label: 'Maksimum kazanç', score: 5 },
-    ],
-  },
+    {
+      id: 'investmentHorizon',
+      text: 'Yatırım süreniz ne kadar?',
+      options: [
+        { label: '0–1 yıl', score: 1 },
+        { label: '1–3 yıl', score: 2 },
+        { label: '3–7 yıl', score: 3 },
+        { label: '7+ yıl', score: 4 },
+      ],
+    },
+    {
+      id: 'drawdownTolerance',
+      text: 'Ana paranızın %10 değer kaybetmesi sizi ne kadar endişelendirir?',
+      options: [
+        { label: 'Çok endişelendirir', score: 1 },
+        { label: 'Endişelendirir', score: 2 },
+        { label: 'Biraz endişelendirir', score: 3 },
+        { label: 'Hiç endişe duymam', score: 4 },
+      ],
+    },
+    {
+      id: 'incomeStability',
+      text: 'Gelirinizin düzenliliği nasıl?',
+      options: [
+        { label: 'Çok değişken / belirsiz', score: 1 },
+        { label: 'Değişken', score: 2 },
+        { label: 'Kısmen düzenli', score: 3 },
+        { label: 'Çok düzenli', score: 4 },
+      ],
+    },
+    {
+      id: 'liquidityNeed',
+      text: 'Yakında bu birikime ihtiyaç duyma olasılığınız nedir?',
+      options: [
+        { label: 'Çok yüksek', score: 1 },
+        { label: 'Yüksek', score: 2 },
+        { label: 'Orta', score: 3 },
+        { label: 'Düşük', score: 4 },
+      ],
+    },
+    {
+      id: 'volatilityReaction',
+      text: 'Portföyünüz bir ayda %15 düşerse ne yaparsınız?',
+      options: [
+        { label: 'Hemen satarım', score: 1 },
+        { label: 'Önemli kısmını satarım', score: 2 },
+        { label: 'Biraz satar, çoğunu beklerim', score: 3 },
+        { label: 'Beklerim / ek alım yaparım', score: 4 },
+      ],
+    },
+    {
+      id: 'experience',
+      text: 'Yatırım tecrübenizi nasıl tanımlarsınız?',
+      options: [
+        { label: 'Yeni başlıyorum', score: 1 },
+        { label: 'Temel bilgim var', score: 2 },
+        { label: 'Orta seviye', score: 3 },
+        { label: 'Deneyimliyim', score: 4 },
+      ],
+    },
+    {
+      id: 'tracking',
+      text: 'Portföyünüzü ne sıklıkla takip edebilirsiniz?',
+      options: [
+        { label: 'Nadiren', score: 1 },
+        { label: 'Ayda bir', score: 2 },
+        { label: 'Haftalık', score: 3 },
+        { label: 'Günlük', score: 4 },
+      ],
+    },
+    {
+      id: 'returnPriority',
+      text: 'Sizin için hangisi daha öncelikli?',
+      options: [
+        { label: 'Anapara güvenliği', score: 1 },
+        { label: 'Önce güvenlik, sınırlı risk', score: 2 },
+        { label: 'Denge (risk/getiri)', score: 3 },
+        { label: 'Yüksek getiri potansiyeli', score: 4 },
+      ],
+    },
+    {
+      id: 'goal',
+      text: 'Amacınız nedir?',
+      options: [
+        { label: 'Birikimimi korumak', score: 1 },
+        { label: 'Enflasyonun üzerinde koruma', score: 2 },
+        { label: 'Düzenli gelir + birikim', score: 3 },
+        { label: 'Uzun vadede maksimum kazanç', score: 4 },
+      ],
+    },
   ],
   en: [
     {
       id: 'investmentHorizon',
       text: 'What is your investment horizon?',
       options: [
-        { label: '0-1 year', score: 1 },
-        { label: '1-3 years', score: 3 },
-        { label: '3+ years', score: 5 },
+        { label: '0–1 year', score: 1 },
+        { label: '1–3 years', score: 2 },
+        { label: '3–7 years', score: 3 },
+        { label: '7+ years', score: 4 },
       ],
     },
     {
@@ -104,26 +114,29 @@ const questionsByLanguage = {
       text: 'How concerned would you be if your principal drops by 10%?',
       options: [
         { label: 'Very concerned', score: 1 },
+        { label: 'Concerned', score: 2 },
         { label: 'Somewhat concerned', score: 3 },
-        { label: 'Not concerned', score: 5 },
+        { label: 'Not concerned', score: 4 },
       ],
     },
     {
       id: 'incomeStability',
       text: 'How stable is your income?',
       options: [
-        { label: 'Unstable / uncertain', score: 1 },
+        { label: 'Highly unstable', score: 1 },
+        { label: 'Unstable', score: 2 },
         { label: 'Partially stable', score: 3 },
-        { label: 'Very stable', score: 5 },
+        { label: 'Very stable', score: 4 },
       ],
     },
     {
       id: 'liquidityNeed',
       text: 'How likely are you to need this money soon?',
       options: [
-        { label: 'High', score: 1 },
+        { label: 'Very high', score: 1 },
+        { label: 'High', score: 2 },
         { label: 'Medium', score: 3 },
-        { label: 'Low', score: 5 },
+        { label: 'Low', score: 4 },
       ],
     },
     {
@@ -131,8 +144,9 @@ const questionsByLanguage = {
       text: 'What would you do if your portfolio drops 15% in one month?',
       options: [
         { label: 'Sell immediately', score: 1 },
-        { label: 'Sell some of it', score: 3 },
-        { label: 'Hold / add more', score: 5 },
+        { label: 'Sell a large portion', score: 2 },
+        { label: 'Sell a little, hold the rest', score: 3 },
+        { label: 'Hold / add more', score: 4 },
       ],
     },
     {
@@ -140,8 +154,9 @@ const questionsByLanguage = {
       text: 'How would you describe your investment experience?',
       options: [
         { label: 'Beginner', score: 1 },
+        { label: 'Basic knowledge', score: 2 },
         { label: 'Intermediate', score: 3 },
-        { label: 'Experienced', score: 5 },
+        { label: 'Experienced', score: 4 },
       ],
     },
     {
@@ -149,17 +164,19 @@ const questionsByLanguage = {
       text: 'How often can you monitor your portfolio?',
       options: [
         { label: 'Rarely', score: 1 },
+        { label: 'Monthly', score: 2 },
         { label: 'Weekly', score: 3 },
-        { label: 'Daily', score: 5 },
+        { label: 'Daily', score: 4 },
       ],
     },
     {
       id: 'returnPriority',
       text: 'Which is your priority?',
       options: [
-        { label: 'Capital safety', score: 1 },
-        { label: 'Balance', score: 3 },
-        { label: 'High return potential', score: 5 },
+        { label: 'Capital safety first', score: 1 },
+        { label: 'Safety first, limited risk', score: 2 },
+        { label: 'Balance (risk / return)', score: 3 },
+        { label: 'High return potential', score: 4 },
       ],
     },
     {
@@ -167,30 +184,24 @@ const questionsByLanguage = {
       text: 'What is your primary goal?',
       options: [
         { label: 'Protect my savings', score: 1 },
-        { label: 'Generate regular income', score: 3 },
-        { label: 'Maximize gains', score: 5 },
+        { label: 'Beat inflation cautiously', score: 2 },
+        { label: 'Income plus growth', score: 3 },
+        { label: 'Maximum long-term growth', score: 4 },
       ],
     },
   ],
 }
 
+/** 9 soru × 4 puan = 36 max; eşit genişlikte 7 kademe (9–12 … 33–36). */
 function calculateRiskProfile(totalScore) {
-  if (totalScore <= 14) {
-    return 'Çok Muhafazakar'
-  }
-  if (totalScore <= 22) {
-    return 'Muhafazakar'
-  }
-  if (totalScore <= 30) {
-    return 'Dengeli'
-  }
-  if (totalScore <= 38) {
-    return 'Büyüme Odaklı'
-  }
-  if (totalScore <= 45) {
-    return 'Agresif'
-  }
-  return 'Dengeli'
+  const s = Math.min(36, Math.max(9, Number(totalScore) || 18))
+  if (s <= 12) return 'Çok Muhafazakar'
+  if (s <= 16) return 'Muhafazakar'
+  if (s <= 20) return 'İhtiyatlı'
+  if (s <= 24) return 'Dengeli'
+  if (s <= 28) return 'Dinamik'
+  if (s <= 32) return 'Büyüme Odaklı'
+  return 'Agresif'
 }
 
 export default function TestCommandPage({ onBack, onComplete }) {
@@ -247,7 +258,11 @@ export default function TestCommandPage({ onBack, onComplete }) {
     }
 
     if (isLastStep) {
-      const totalScore = Object.values(answers).reduce(
+      const merged = { ...answers }
+      if (currentQuestion && selectedScore != null) {
+        merged[currentQuestion.id] = selectedScore
+      }
+      const totalScore = Object.values(merged).reduce(
         (sum, value) => sum + Number(value || 0),
         0,
       )
@@ -326,9 +341,9 @@ export default function TestCommandPage({ onBack, onComplete }) {
               </h2>
 
               <div className="mt-4 space-y-3">
-                {currentQuestion.options.map((option) => (
+                {currentQuestion.options.map((option, optIdx) => (
                   <button
-                    key={option.label}
+                    key={`${currentQuestion.id}-${optIdx}`}
                     type="button"
                     onClick={() => handleSelectOption(option.score)}
                     className={`w-full rounded-xl border px-4 py-3 text-left text-sm font-medium transition md:text-base ${
