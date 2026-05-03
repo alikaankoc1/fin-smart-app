@@ -1,5 +1,6 @@
-import { verifyPassword } from '../lib/password.js'
 import { createSession, findUser, normalizeEmail } from './store.js'
+
+/** Local demo: password is not verified; any value is accepted if the account exists. */
 
 function setCors(res) {
   res.setHeader('Access-Control-Allow-Origin', '*')
@@ -22,15 +23,14 @@ export default async function handler(req, res) {
 
   const body = req.body || {}
   const email = normalizeEmail(body.email)
-  const password = String(body.password || '')
 
-  if (!email || !password) {
+  if (!email) {
     res.status(400).json({ error: 'VALIDATION' })
     return
   }
 
   const user = findUser(email)
-  if (!user || !verifyPassword(password, user.passwordHash)) {
+  if (!user) {
     res.status(401).json({ error: 'INVALID_CREDENTIALS' })
     return
   }

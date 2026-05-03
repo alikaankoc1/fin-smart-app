@@ -338,13 +338,7 @@ export default function LoginPage({ onLogin }) {
                               autoComplete="current-password"
                               placeholder="••••••••"
                               className={inputClass}
-                              {...signInForm.register('password', {
-                                required: copy.passwordRequired,
-                                minLength: {
-                                  value: 6,
-                                  message: copy.passwordLength,
-                                },
-                              })}
+                              {...signInForm.register('password')}
                             />
                           </div>
                           {signInForm.formState.errors.password && (
