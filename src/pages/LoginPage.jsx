@@ -125,6 +125,7 @@ export default function LoginPage({ onLogin }) {
                       </p>
                       <button
                         type="button"
+                        data-testid="promo-go-register"
                         onClick={() => setPanel('register')}
                         className="w-full rounded-xl border-2 border-white/90 bg-transparent px-4 py-3 text-base font-semibold text-white transition hover:bg-white/10"
                       >
@@ -139,6 +140,7 @@ export default function LoginPage({ onLogin }) {
                       </p>
                       <button
                         type="button"
+                        data-testid="promo-go-login"
                         onClick={() => setPanel('login')}
                         className="w-full rounded-xl border-2 border-white/90 bg-transparent px-4 py-3 text-base font-semibold text-white transition hover:bg-white/10"
                       >

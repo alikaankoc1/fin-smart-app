@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react'
 import LanguageSwitcher from '../components/LanguageSwitcher'
 import useFinance from '../hooks/useFinance'
 import useLanguage from '../hooks/useLanguage'
+import { parseAmountInput } from '../utils/parseAmountInput'
 
 const questionsByLanguage = {
   tr: [
@@ -171,43 +172,6 @@ const questionsByLanguage = {
       ],
     },
   ],
-}
-
-function parseAmountInput(rawValue) {
-  const cleaned = rawValue.replace(/\s/g, '')
-  if (!cleaned) {
-    return 0
-  }
-
-  // Handles grouped thousands like 100.000 or 100,000
-  if (/^\d{1,3}([.,]\d{3})+$/.test(cleaned)) {
-    return Number(cleaned.replace(/[.,]/g, ''))
-  }
-
-  const hasDot = cleaned.includes('.')
-  const hasComma = cleaned.includes(',')
-
-  if (hasDot && hasComma) {
-    const lastDot = cleaned.lastIndexOf('.')
-    const lastComma = cleaned.lastIndexOf(',')
-    const decimalSeparator = lastDot > lastComma ? '.' : ','
-    const thousandsSeparator = decimalSeparator === '.' ? ',' : '.'
-    const normalized = cleaned
-      .replaceAll(thousandsSeparator, '')
-      .replace(decimalSeparator, '.')
-    return Number(normalized) || 0
-  }
-
-  if (hasComma || hasDot) {
-    const separator = hasComma ? ',' : '.'
-    const parts = cleaned.split(separator)
-    if (parts.length === 2 && parts[1].length === 3 && parts[0].length >= 1) {
-      return Number(parts.join('')) || 0
-    }
-    return Number(cleaned.replace(',', '.')) || 0
-  }
-
-  return Number(cleaned) || 0
 }
 
 function calculateRiskProfile(totalScore) {

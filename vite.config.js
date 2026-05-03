@@ -43,6 +43,14 @@ function createApiMiddleware(handler) {
 
 // https://vite.dev/config/
 export default defineConfig({
+  esbuild: {
+    jsx: 'automatic',
+  },
+  test: {
+    environment: 'jsdom',
+    setupFiles: './src/test/setup.js',
+    css: true,
+  },
   plugins: [
     react(),
     {

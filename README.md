@@ -67,6 +67,14 @@ npm run build
 npm run lint
 ```
 
+### 7) Testler (Vitest)
+
+```bash
+npm run test
+```
+
+Geliştirme sırasında izlemek için: `npm run test:watch`
+
 ## Notlar
 
 - Proje geliştirme sürecinde canlı veri servisleri kullanılmaktadır.
