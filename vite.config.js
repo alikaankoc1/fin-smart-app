@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import healthHandler from './api/health.js'
 import loginHandler from './api/auth/login.js'
+import logoutHandler from './api/auth/logout.js'
 import meHandler from './api/auth/me.js'
 import registerHandler from './api/auth/register.js'
 import latestHandler from './api/market/latest.js'
@@ -86,6 +87,10 @@ export default defineConfig({
           createApiMiddleware(loginHandler, { parseJsonBody: true }),
         )
         server.middlewares.use('/api/auth/me', createApiMiddleware(meHandler))
+        server.middlewares.use(
+          '/api/auth/logout',
+          createApiMiddleware(logoutHandler),
+        )
         server.middlewares.use('/api/market/latest', createApiMiddleware(latestHandler))
         server.middlewares.use('/api/market/history', createApiMiddleware(historyHandler))
       },

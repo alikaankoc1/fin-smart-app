@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react'
+import AuthUserBar from './components/AuthUserBar'
+import { AUTH_TOKEN_KEY } from './constants/auth'
 import { FinanceProvider } from './context/FinanceContext'
 import { LanguageProvider } from './context/LanguageContext'
 import LoginPage from './pages/LoginPage'
@@ -55,6 +57,25 @@ function App() {
     navigateTo('board')
   }
 
+  const handleLogout = async () => {
+    const token = sessionStorage.getItem(AUTH_TOKEN_KEY)
+    if (token) {
+      try {
+        await fetch('/api/auth/logout', {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${token}` },
+        })
+      } catch {
+        /* ignore network errors; still clear client session */
+      }
+    }
+    sessionStorage.removeItem(AUTH_TOKEN_KEY)
+    setIsAuthenticated(false)
+    setSelectedInstrument(null)
+    window.history.replaceState({ page: 'login' }, '', PAGE_HASH.login)
+    setActivePage('login')
+  }
+
   const handleOpenTrend = (instrument) => {
     setSelectedInstrument(instrument)
     navigateTo('trend')
@@ -70,23 +91,28 @@ function App() {
       <FinanceProvider>
         {!isAuthenticated ? (
           <LoginPage onLogin={handleLogin} />
-        ) : activePage === 'test' ? (
-          <TestCommandPage
-            onBack={handleBackToBoard}
-            onComplete={() => navigateTo('recommendation')}
-          />
-        ) : activePage === 'recommendation' ? (
-          <RecommendationResult onBack={handleBackToBoard} />
-        ) : activePage === 'trend' && selectedInstrument ? (
-          <MarketTrendPage
-            instrument={selectedInstrument}
-            onBack={handleBackToBoard}
-          />
         ) : (
-          <MarketBoardPage
-            onSelectInstrument={handleOpenTrend}
-            onGoTestPage={() => navigateTo('test')}
-          />
+          <>
+            <AuthUserBar onLogout={handleLogout} />
+            {activePage === 'test' ? (
+              <TestCommandPage
+                onBack={handleBackToBoard}
+                onComplete={() => navigateTo('recommendation')}
+              />
+            ) : activePage === 'recommendation' ? (
+              <RecommendationResult onBack={handleBackToBoard} />
+            ) : activePage === 'trend' && selectedInstrument ? (
+              <MarketTrendPage
+                instrument={selectedInstrument}
+                onBack={handleBackToBoard}
+              />
+            ) : (
+              <MarketBoardPage
+                onSelectInstrument={handleOpenTrend}
+                onGoTestPage={() => navigateTo('test')}
+              />
+            )}
+          </>
         )}
       </FinanceProvider>
     </LanguageProvider>
