@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { ArrowLeft } from 'lucide-react'
+import { getStatusMessages } from '../copy/statusMessages'
 import LanguageSwitcher from '../components/LanguageSwitcher'
 import useLanguage from '../hooks/useLanguage'
 import {
@@ -110,6 +111,7 @@ function buildChartModel(series) {
 export default function MarketTrendPage({ instrument, onBack }) {
   const { language } = useLanguage()
   const isEn = language === 'en'
+  const messages = useMemo(() => getStatusMessages(language), [language])
   const [range, setRange] = useState('3m')
   const [interval, setInterval] = useState('1d')
   const [activeFilter, setActiveFilter] = useState('range:3m')
@@ -243,11 +245,13 @@ export default function MarketTrendPage({ instrument, onBack }) {
 
         <div className="rounded-2xl border border-slate-700 bg-slate-950 p-4">
           {isLoading && (
-            <p className="text-sm text-slate-400">
-              {isEn ? 'Loading chart...' : 'Grafik yükleniyor...'}
-            </p>
+            <p className="text-sm text-slate-400">{messages.loadingChart}</p>
           )}
-          {error && <p className="text-sm text-rose-300">{error}</p>}
+          {error && (
+            <div className="rounded-xl border border-rose-500/40 bg-rose-500/10 px-4 py-3 text-sm text-rose-200">
+              {error}
+            </div>
+          )}
 
           {!isLoading && !error && chartModel && (
             <div className="space-y-3">
@@ -336,14 +340,14 @@ export default function MarketTrendPage({ instrument, onBack }) {
               </svg>
             </div>
           )}
+
+          {!isLoading && !error && !chartModel && (
+            <p className="text-sm text-slate-400">{messages.chartInsufficient}</p>
+          )}
         </div>
 
         {isFallbackMode && (
-          <p className="mt-3 text-xs text-amber-300/90">
-            {isEn
-              ? 'History source unavailable, showing temporary trend around current price.'
-              : 'Geçmiş veri kaynağına erişim sağlanamadığı için grafik geçici olarak güncel fiyat etrafında oluşturulan trend ile gösteriliyor.'}
-          </p>
+          <p className="mt-3 text-xs text-amber-300/90">{messages.historyFallback}</p>
         )}
 
         {!isLoading && !error && series.length > 1 && (

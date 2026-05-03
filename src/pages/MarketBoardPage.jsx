@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { RefreshCw } from 'lucide-react'
+import { getStatusMessages, resolveFetchErrorMessage } from '../copy/statusMessages'
 import LanguageSwitcher from '../components/LanguageSwitcher'
 import useLanguage from '../hooks/useLanguage'
 import { fetchMarketBoardData } from '../services/marketData'
@@ -12,6 +13,7 @@ const moneyFormatter = new Intl.NumberFormat('tr-TR', {
 export default function MarketBoardPage({ onSelectInstrument, onGoTestPage }) {
   const { language } = useLanguage()
   const isEn = language === 'en'
+  const messages = useMemo(() => getStatusMessages(language), [language])
   const [rows, setRows] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
@@ -24,11 +26,9 @@ export default function MarketBoardPage({ onSelectInstrument, onGoTestPage }) {
       setRows(data)
       setLastUpdated(new Date())
     } catch (err) {
-      setError(
-        err.message || (isEn ? 'Failed to load market data.' : 'Veri alınırken bir hata oluştu.'),
-      )
+      setError(resolveFetchErrorMessage(err.message, messages))
     }
-  }, [isEn])
+  }, [messages])
 
   const handleRefresh = async () => {
     setIsLoading(true)
@@ -141,14 +141,14 @@ export default function MarketBoardPage({ onSelectInstrument, onGoTestPage }) {
               {!isLoading && rows.length === 0 && (
                 <tr>
                   <td colSpan={3} className="px-4 py-8 text-center text-sm text-slate-400">
-                    {isEn ? 'No data to display.' : 'Gösterilecek veri bulunamadı.'}
+                    {messages.emptyTable}
                   </td>
                 </tr>
               )}
               {isLoading && (
                 <tr>
                   <td colSpan={3} className="px-4 py-8 text-center text-sm text-slate-400">
-                    {isEn ? 'Loading market data...' : 'Piyasa verileri yükleniyor...'}
+                    {messages.loadingMarket}
                   </td>
                 </tr>
               )}

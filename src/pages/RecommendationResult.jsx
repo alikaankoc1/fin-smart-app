@@ -7,6 +7,7 @@ import {
   Landmark,
 } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
+import { getStatusMessages } from '../copy/statusMessages'
 import LanguageSwitcher from '../components/LanguageSwitcher'
 import useLanguage from '../hooks/useLanguage'
 import useFinance from '../hooks/useFinance'
@@ -187,6 +188,7 @@ function getVolatilityAlert(annualVolatility, isEnglish = false) {
 export default function RecommendationResult({ onBack }) {
   const { language } = useLanguage()
   const isEn = language === 'en'
+  const messages = useMemo(() => getStatusMessages(language), [language])
   const { riskProfile, totalBalance } = useFinance()
   const [investmentMode, setInvestmentMode] = useState('mixed')
   const [singleAssetId, setSingleAssetId] = useState('usd')
@@ -446,13 +448,7 @@ export default function RecommendationResult({ onBack }) {
                     </>
                   ) : (
                     <p className="text-sm text-slate-500">
-                      {loading
-                        ? isEn
-                          ? 'Calculating scenarios...'
-                          : 'Senaryo hesaplanıyor...'
-                        : isEn
-                          ? 'Scenario could not be calculated.'
-                          : 'Senaryo hesaplanamadı.'}
+                      {loading ? messages.scenarioCalculating : messages.scenarioFailed}
                     </p>
                   )}
                 </div>
