@@ -1,3 +1,5 @@
+import { yahooUsdPerOz } from '../../api/lib/yahooUsdPerOz.js'
+
 const FX_API_URL = 'https://open.er-api.com/v6/latest/TRY'
 const METALS_API_URL = 'https://metalmetric.com/api/gpt?action=spot_prices&metal=all'
 const MARKET_LATEST_API_URL = '/api/market/latest'
@@ -55,15 +57,28 @@ export async function fetchMarketBoardData() {
       metalsData = await metalsResponse.json()
     }
   } catch {
-    /* Tarayıcı CORS veya ağ — sunucu proxy yoksa altın/gümüş atlanır */
+    /* Tarayıcı CORS veya ağ */
   }
 
   const usdTry = 1 / fxData.rates.USD
   const eurTry = 1 / fxData.rates.EUR
   const gbpTry = 1 / fxData.rates.GBP
 
-  const goldUsdPerOunce = metalsData?.prices?.gold?.price_per_oz ?? 0
-  const silverUsdPerOunce = metalsData?.prices?.silver?.price_per_oz ?? 0
+  let goldUsdPerOunce = metalsData?.prices?.gold?.price_per_oz ?? 0
+  let silverUsdPerOunce = metalsData?.prices?.silver?.price_per_oz ?? 0
+
+  if (!(goldUsdPerOunce > 0)) {
+    const y = await yahooUsdPerOz('GC=F')
+    if (y != null) {
+      goldUsdPerOunce = y
+    }
+  }
+  if (!(silverUsdPerOunce > 0)) {
+    const y = await yahooUsdPerOz('SI=F')
+    if (y != null) {
+      silverUsdPerOunce = y
+    }
+  }
   const gramGoldTry = (goldUsdPerOunce * usdTry) / OUNCE_TO_GRAM
   const gramSilverTry = (silverUsdPerOunce * usdTry) / OUNCE_TO_GRAM
   const quarterGoldTry = gramGoldTry * GRAM_GOLD_IN_QUARTER
