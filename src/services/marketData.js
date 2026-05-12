@@ -21,7 +21,8 @@ function makeBidAsk(midPrice, spreadRatio) {
 export async function fetchMarketBoardData() {
   try {
     const response = await fetch(MARKET_LATEST_API_URL, { cache: 'no-store' })
-    if (!response.ok) {
+    const contentType = response.headers.get('content-type') || ''
+    if (!response.ok || !contentType.includes('application/json')) {
       throw new Error('proxy failed')
     }
     const payload = await response.json()
@@ -36,20 +37,26 @@ export async function fetchMarketBoardData() {
     }
     throw new Error('invalid payload')
   } catch {
-    // Local fallback when serverless endpoint is unavailable.
+    // Same-origin /api missing (e.g. static-only deploy) or invalid JSON — use direct fetch below.
   }
 
-  const [fxResponse, metalsResponse] = await Promise.all([
-    fetch(FX_API_URL, { cache: 'no-store' }),
-    fetch(METALS_API_URL, { cache: 'no-store' }),
-  ])
-
-  if (!fxResponse.ok || !metalsResponse.ok) {
+  const fxResponse = await fetch(FX_API_URL, { cache: 'no-store' })
+  if (!fxResponse.ok) {
     throw new Error('Canlı piyasa verisi alınamadı.')
   }
 
   const fxData = await fxResponse.json()
-  const metalsData = await metalsResponse.json()
+
+  let metalsData = null
+  try {
+    const metalsResponse = await fetch(METALS_API_URL, { cache: 'no-store' })
+    const mct = metalsResponse.headers.get('content-type') || ''
+    if (metalsResponse.ok && mct.includes('application/json')) {
+      metalsData = await metalsResponse.json()
+    }
+  } catch {
+    /* Tarayıcı CORS veya ağ — sunucu proxy yoksa altın/gümüş atlanır */
+  }
 
   const usdTry = 1 / fxData.rates.USD
   const eurTry = 1 / fxData.rates.EUR
@@ -68,17 +75,25 @@ export async function fetchMarketBoardData() {
     { id: 'usd', name: 'Dolar', ...makeBidAsk(usdTry, 0.0025) },
     { id: 'eur', name: 'Euro', ...makeBidAsk(eurTry, 0.0025) },
     { id: 'gbp', name: 'Pound', ...makeBidAsk(gbpTry, 0.003) },
-    { id: 'gram', name: 'Gram Altın', ...makeBidAsk(gramGoldTry, 0.004) },
-    { id: 'quarter', name: 'Çeyrek Altın', ...makeBidAsk(quarterGoldTry, 0.006) },
-    { id: 'half', name: 'Yarım Altın', ...makeBidAsk(halfGoldTry, 0.0065) },
-    { id: 'full', name: 'Tam Altın', ...makeBidAsk(fullGoldTry, 0.007) },
-    {
-      id: 'republic',
-      name: 'Cumhuriyet Altını',
-      ...makeBidAsk(republicGoldTry, 0.0075),
-    },
-    { id: 'silver', name: 'Gram Gümüş', ...makeBidAsk(gramSilverTry, 0.0055) },
   ]
+
+  if (goldUsdPerOunce > 0) {
+    rows.push(
+      { id: 'gram', name: 'Gram Altın', ...makeBidAsk(gramGoldTry, 0.004) },
+      { id: 'quarter', name: 'Çeyrek Altın', ...makeBidAsk(quarterGoldTry, 0.006) },
+      { id: 'half', name: 'Yarım Altın', ...makeBidAsk(halfGoldTry, 0.0065) },
+      { id: 'full', name: 'Tam Altın', ...makeBidAsk(fullGoldTry, 0.007) },
+      {
+        id: 'republic',
+        name: 'Cumhuriyet Altını',
+        ...makeBidAsk(republicGoldTry, 0.0075),
+      },
+    )
+  }
+
+  if (silverUsdPerOunce > 0) {
+    rows.push({ id: 'silver', name: 'Gram Gümüş', ...makeBidAsk(gramSilverTry, 0.0055) })
+  }
 
   return {
     rows,

@@ -1,3 +1,4 @@
+import { attachJsonBody } from '../lib/attachJsonBody.js'
 import { hashPassword, verifyPassword } from '../lib/password.js'
 import { requireAuthUser } from '../lib/requireAuth.js'
 import { findUser, updatePasswordHash } from './store.js'
@@ -20,6 +21,8 @@ export default async function handler(req, res) {
     res.status(405).json({ error: 'Method not allowed' })
     return
   }
+
+  await attachJsonBody(req)
 
   const authUser = requireAuthUser(req)
   if (!authUser) {
